@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account — WE-LINK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/welink-design-tokens.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/guest-dashboard.css" />
+  <link rel="stylesheet" href="css/pro-dashboard.css" />
+  <link rel="stylesheet" href="css/welink-admin-theme-sync.css" />
+  <link rel="stylesheet" href="css/events.css" />
+  <link rel="stylesheet" href="css/skills-picker.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+  <link rel="stylesheet" href="css/welink-skill-labels.css" />
+</head>
+<body class="welink-cinematic">
+  <header data-header></header>
+  <main class="page wrap" id="app"><p class="muted">Loading…</p></main>
+
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/skills-picker.js"></script>
+  <script src="js/chat-ui.js"></script>
+  <script src="js/store.js?v=silent-admin-monitoring"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/discovery.js"></script>
+  <script src="js/guest-dashboard-ui.js"></script>
+  <script src="js/pro-dashboard-ui.js"></script>
+  <script src="js/events-ui.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    (async () => {
+      const s = await WeLinkUI.requireRole();
+      if (!s) return;
+      if (s.role === "admin") { location.href = "admin.html"; return; }
+      const isGuest = s.role === "guest";
+      const isPro = s.role === "professional";
+      const appHeader = document.querySelector("[data-header]");
+      if (isGuest) {
+        document.body.classList.add("guest-dashboard-page");
+      } else if (isPro) {
+        document.body.classList.add("pro-dashboard-page");
+      }
+      if (appHeader && (isGuest || isPro)) {
+        appHeader.className = "app-logo-bar";
+        appHeader.innerHTML = `<div class="wrap"><a class="ix" href="index.html">${WeLinkUI.logo}</a></div>`;
+      } else if (appHeader) {
+        await WeLinkUI.renderHeader(appHeader);
+      }
+      await WeLink.load();
+
+      const app = document.getElementById("app");
+      const H = WeLinkHelpers;
+      const D = WeLinkDiscovery;
+      let guestView = "home";
+      let proView = "home";
+      let selectedProId = null;
+      let selectedGuestId = null;
+      let browseSearch = "";
+      let browseSkill = "";
+      let eventEditId = null;
+      let countdownTimer = null;
+
+      function stopEventCountdown() {
+        if (countdownTimer) clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+
+      function startEventCountdown() {
+        stopEventCountdown();
+        WeLinkEventsUI.tickCountdowns(app);
+        countdownTimer = setInterval(() => WeLinkEventsUI.tickCountdowns(app), 1000);
+      }
+
+      function locationLine(entity) {
+        const town = entity.town || entity.location || "";
+        const area = entity.area || "";
+        if (town && area) return H.esc(town) + " · " + H.esc(area);
+        return H.esc(town || area);
+      }
+
+      let activeChatConversationId = null;
+      let activeAdminSupportConversationId = null;
+
+      function leaveChat() {
+        activeChatConversationId = null;
+        activeAdminSupportConversationId = null;
+        if (window.WeLinkRealtime) {
+          WeLinkRealtime.unsubscribeParticipantMessages();
+          WeLinkRealtime.unsubscribeAdminSupportMessages();
+        }
+      }
+
+      function guestMsgCount(db) {
+        const proPending = (db?.communicationRequests || []).filter((r) => r.guestId === s.id && r.status === "pending").length;
+        const adminPending = WeLink.getAdminSupportRequestForUser(s.id)?.status === "pending" ? 1 : 0;
+        return proPending + adminPending;
+      }
+
+      function adminSupportInboxHtml() {
+        const req = WeLink.getAdminSupportRequestForUser(s.id);
+        const canChat = WeLink.canAdminSupportChat(s.id);
+        const blocked = WeLink.adminSupportChatBlockedReason(s.id);
+        let actions = "";
+        if (canChat) {
+          actions = `<button class="gd-btn-gradient gd-btn-sm" type="button" data-open-admin-chat>Open chat with admin</button>`;
+        } else if (req?.status === "pending") {
+          actions = `<span class="status-pill status-pending">Pending admin approval</span>
+            <button class="gd-btn-dark" type="button" data-cancel-admin-support="${req.id}">Cancel</button>`;
+        } else if (req?.status === "rejected") {
+          actions = `<p class="muted" style="margin:8px 0 0;font-size:13px">Request declined. Try again after ${H.fmtTime(WeLink.cooldownUntil(req.rejectedAt))}.</p>`;
+        } else if (!blocked || req?.status === "ended" || req?.status === "cancelled") {
+          actions = `<button class="gd-btn-gradient gd-btn-sm" type="button" data-request-admin-support>Request communication with admin</button>`;
+        } else {
+          actions = `<p class="muted" style="margin:8px 0 0;font-size:13px">${H.esc(blocked)}</p>`;
+        }
+        return `<div class="card comm-item" style="margin-bottom:16px">
+          <div>
+            <strong>WE-LINK Admin</strong>
+            <p class="muted" style="margin:4px 0 0;font-size:13px">Support, account help, and platform questions.</p>
+            <div class="comm-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">${actions}</div>
+          </div>
+        </div>`;
+      }
+
+      async function renderAdminSupportChatRoom() {
+        const blocked = WeLink.adminSupportChatBlockedReason(s.id);
+        const conv = WeLink.getActiveAdminSupportConversation(s.id);
+        if (!conv) {
+          return `<p class="muted">${H.esc(blocked || "Chat with admin opens after your request is approved or admin starts a conversation with you.")}</p>`;
+        }
+        const msgs = await WeLink.getAdminSupportMessages(conv.id);
+        return `<div class="chat-room">
+          <div class="chat-room-head">
+            <strong>Admin support</strong>
+          </div>
+          <div class="chat-msgs chat-msgs-room">${msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet. Say hello.</p>`}</div>
+          ${WeLinkChatUI.chatComposerHtml()}
+        </div>`;
+      }
+
+      function bindAdminSupportChatRoom(conversation) {
+        activeAdminSupportConversationId = conversation.id;
+        const form = app.querySelector("[data-private-send]");
+        WeLinkChatUI.bindParticipantChatForm(form, {
+          onSend: async ({ text, image }) => {
+            const res = await WeLink.sendAdminSupportMessage(conversation.id, text, { image });
+            if (!res.ok) {
+              alert(res.error);
+              return false;
+            }
+            if (res.message) appendChatMessage(res.message);
+            else {
+              const msgs = await WeLink.getAdminSupportMessages(conversation.id);
+              const box = app.querySelector(".chat-msgs-room");
+              if (box) {
+                box.innerHTML = msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet.</p>`;
+              }
+            }
+            return true;
+          }
+        });
+        if (window.WeLinkRealtime && activeAdminSupportConversationId === conversation.id) {
+          WeLinkRealtime.subscribeAdminSupportMessages(conversation.id, (row) => {
+            if (activeAdminSupportConversationId !== conversation.id) return;
+            appendChatMessage(rowToMessage(row));
+          });
+        }
+      }
+
+      function guestLocationLabel(entity) {
+        const town = (entity.town || entity.location || "").trim();
+        const area = (entity.area || "").trim();
+        if (town && area) return (town + " - " + area).toUpperCase();
+        return (town || area || "").toUpperCase();
+      }
+
+      function guestCommHtml(proId) {
+        const canChat = WeLink.canPrivateChat(s.id, proId);
+        const req = WeLink.getCommRequest(s.id, proId);
+        const ended = WeLink.isCommunicationEnded(s.id, proId);
+        const blocked = WeLink.conversationChatBlockedReason(s.id, proId);
+
+        if (canChat) {
+          return `<div class="comm-actions"><button class="gd-btn-gradient gd-btn-sm" type="button" data-open-chat="${proId}">Open chat</button></div>`;
+        }
+        if (req?.status === "pending") {
+          return `<div class="comm-actions">
+            <span class="status-pill status-pending">Pending admin approval</span>
+            <button class="gd-btn-dark" type="button" data-cancel-comm="${req.id}">Cancel</button>
+          </div>`;
+        }
+        if (blocked && blocked.includes("suspended")) {
+          return `<p class="muted" style="margin-top:10px;font-size:13px">${H.esc(blocked)}</p>`;
+        }
+        if (ended || req?.status === "ended") {
+          return `<div class="comm-ended-notice">
+            <p class="muted" style="margin:0 0 10px;font-size:13px">${H.esc(blocked || "Communication was ended. Send a new request for admin approval.")}</p>
+            <div class="comm-actions"><button class="gd-btn-gradient gd-btn-sm" type="button" data-comm-req="${proId}">Send New Request</button></div>
+          </div>`;
+        }
+        if (req?.status === "rejected" && !WeLink.canReRequest(req.rejectedAt)) {
+          return `<p class="muted" style="margin-top:10px;font-size:13px">Rejected. You can request again after ${H.fmtTime(WeLink.cooldownUntil(req.rejectedAt))}.</p>`;
+        }
+        return `<div class="comm-actions"><button class="gd-btn-gradient gd-btn-sm" type="button" data-comm-req="${proId}">Request Communication</button></div>`;
+      }
+
+      function messageBubble(m) {
+        return WeLinkChatUI.messageBubbleHtml(m, s.id, H);
+      }
+
+      function appendChatMessage(m) {
+        const box = app.querySelector(".chat-msgs-room");
+        if (!box || !m) return;
+        if (m.id && box.querySelector(`[data-msg-id="${CSS.escape(m.id)}"]`)) return;
+        box.querySelector(".empty-chat")?.remove();
+        box.insertAdjacentHTML("beforeend", messageBubble(m));
+        box.scrollTop = box.scrollHeight;
+      }
+
+      function rowToMessage(row) {
+        if (!row) return null;
+        return {
+          id: row.id,
+          fromId: row.from_id || row.fromId,
+          fromRole: row.from_role || row.fromRole,
+          body: row.body,
+          imageUrl: row.image_url || row.imageUrl || "",
+          createdAt: row.created_at ? new Date(row.created_at).getTime() : (row.createdAt || Date.now())
+        };
+      }
+
+      async function refreshChatMessages(conversationId) {
+        const box = app.querySelector(".chat-msgs-room");
+        if (!box) return;
+        const msgs = await WeLink.getConversationMessages(conversationId);
+        box.innerHTML = msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet. Say hello.</p>`;
+        box.scrollTop = box.scrollHeight;
+      }
+
+      function bindChatRoom(guestId, proId, conversation) {
+        activeChatConversationId = conversation.id;
+        const form = app.querySelector("[data-private-send]");
+        WeLinkChatUI.bindParticipantChatForm(form, {
+          onSend: async ({ text, image }) => {
+            const toId = s.role === "guest" ? proId : guestId;
+            const toRole = s.role === "guest" ? "professional" : "guest";
+            const res = await WeLink.sendPrivateMessage(s.id, s.role, toId, toRole, text, { image });
+            if (!res.ok) {
+              alert(res.error);
+              return false;
+            }
+            if (res.message) appendChatMessage(res.message);
+            else await refreshChatMessages(conversation.id);
+            return true;
+          }
+        });
+        if (window.WeLinkRealtime && activeChatConversationId === conversation.id) {
+          WeLinkRealtime.subscribeParticipantMessages(conversation.id, (row) => {
+            if (activeChatConversationId !== conversation.id) return;
+            appendChatMessage(rowToMessage(row));
+          });
+        }
+        const box = app.querySelector(".chat-msgs-room");
+        if (box) box.scrollTop = box.scrollHeight;
+      }
+
+      async function renderChatRoom(peer, guestId, proId) {
+        const blocked = WeLink.conversationChatBlockedReason(guestId, proId);
+        if (blocked) {
+          return `<p class="muted">${H.esc(blocked)}</p>`;
+        }
+        const conversation = WeLink.getActiveConversation(guestId, proId);
+        if (!conversation) {
+          return `<p class="muted">Chat opens after admin approves the communication request.</p>`;
+        }
+        const msgs = await WeLink.getConversationMessages(conversation.id);
+        return `<div class="chat-room">
+          <div class="chat-room-head">
+            <img class="avatar-sm" src="${H.avatarUrl(peer)}" alt="" />
+            <strong>${H.esc(peer?.name || "Chat")}</strong>
+          </div>
+          <div class="chat-msgs chat-msgs-room">${msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet. Say hello or share a photo.</p>`}</div>
+          ${WeLinkChatUI.chatComposerHtml()}
+        </div>`;
+      }
+
+      async function renderGuest() {
+        const db = await WeLink.load();
+        const u = await WeLink.getGuest(s.id);
+        const allPros = await WeLink.publicProProfiles();
+        const filtered = D.filterPros(allPros, { search: browseSearch, skill: browseSkill });
+        const msgCount = guestMsgCount(db);
+        const G = WeLinkGuestUI;
+
+        if (guestView === "admin-chat") {
+          const body = `<button class="gd-back" type="button" data-guest-view="inbox">← Messages</button>
+            <h2 style="margin:0 0 16px">Chat with admin</h2>
+            ${await renderAdminSupportChatRoom()}`;
+          app.innerHTML = G.layoutInner({ guestView: "inbox", user: u, msgCount, title: "", bodyHtml: body });
+          bindGuestEvents();
+          const conv = WeLink.getActiveAdminSupportConversation(s.id);
+          if (conv) bindAdminSupportChatRoom(conv);
+          return;
+        }
+
+        if (guestView === "chat" && selectedProId) {
+          const p = allPros.find((x) => x.id === selectedProId) || (await WeLink.getPro(selectedProId));
+          const body = `<button class="gd-back" type="button" data-guest-view="inbox">← Messages</button>
+            <h2 style="margin:0 0 16px">Chat with ${H.esc(p?.name || "Professional")}</h2>
+            ${await renderChatRoom(p, s.id, selectedProId)}`;
+          app.innerHTML = G.layoutInner({ guestView: "inbox", user: u, msgCount, title: "", bodyHtml: body });
+          bindGuestEvents();
+          const conv = WeLink.getActiveConversation(s.id, selectedProId);
+          if (conv) bindChatRoom(s.id, selectedProId, conv);
+          return;
+        }
+
+        if (guestView === "events") {
+          stopEventCountdown();
+          const events = WeLink.listEvents().filter((e) => e.status !== "cancelled");
+          app.innerHTML = G.layoutInner({
+            guestView: "events",
+            user: u,
+            msgCount,
+            title: "Events",
+            bodyHtml: WeLinkEventsUI.guestEventsPage(events)
+          });
+          bindGuestEvents();
+          startEventCountdown();
+          return;
+        }
+
+        if (guestView === "edit") {
+          app.innerHTML = G.layoutInner({
+            guestView: "home",
+            user: u,
+            msgCount,
+            title: "Edit profile",
+            bodyHtml: G.editProfileForm(u, WeLink.SKILLS)
+          });
+          bindGuestEvents();
+          bindGuestEditForm();
+          return;
+        }
+
+        if (guestView === "inbox") {
+          const reqs = db.communicationRequests.filter((r) => r.guestId === s.id)
+            .sort((a, b) => b.createdAt - a.createdAt);
+          const list = adminSupportInboxHtml() + (reqs.length
+            ? reqs.map((r) => {
+              const canChat = WeLink.canPrivateChat(s.id, r.proId);
+              return `<div class="card comm-item">
+                <img src="${H.avatarUrl({ photo: r.proPhoto, name: r.proName })}" alt="" />
+                <div>
+                  <strong>${H.esc(r.proName)}</strong>
+                  <span class="status-pill status-${r.status}">${H.statusBadge(r.status)}</span>
+                  <div class="comm-actions">
+                    ${canChat ? `<button class="gd-btn-gradient gd-btn-sm" type="button" data-open-chat="${r.proId}">Open chat</button>` : ""}
+                    ${r.status === "pending" ? `<button class="gd-btn-dark" type="button" data-cancel-comm="${r.id}">Cancel</button>` : ""}
+                  </div>
+                </div>
+              </div>`;
+            }).join("")
+            : `<p class="gd-empty">No professional communication requests yet. Browse professionals to send one.</p>`);
+          app.innerHTML = G.layoutInner({
+            guestView: "inbox",
+            user: u,
+            msgCount,
+            title: "Messages",
+            bodyHtml: list
+          });
+          bindGuestEvents();
+          return;
+        }
+
+        if (guestView === "detail" && selectedProId) {
+          const p = allPros.find((x) => x.id === selectedProId) || (await WeLink.getPro(selectedProId));
+          const body = `<button class="gd-back" type="button" data-guest-view="browse">← Back to directory</button>
+            ${p ? D.renderProDetail(p, "", guestCommHtml(p.id)) : `<p class="err">Profile not found.</p>`}`;
+          app.innerHTML = G.layoutInner({
+            guestView: "browse",
+            user: u,
+            msgCount,
+            title: "Professional profile",
+            bodyHtml: body
+          });
+          bindGuestEvents();
+          return;
+        }
+
+        if (guestView === "browse") {
+          const grid = filtered.length
+            ? `<div class="gd-pro-grid">${filtered.map((p) => G.recommendedCard(p, guestCommHtml(p.id))).join("")}</div>`
+            : `<p class="gd-empty">No approved professionals match your filters.</p>`;
+          const body = `${D.renderBrowseToolbar({ search: browseSearch, skill: browseSkill, skills: WeLink.SKILLS })}
+            <h2 style="margin:20px 0 12px;font-size:1rem">All professionals (${filtered.length})</h2>${grid}`;
+          app.innerHTML = G.layoutInner({
+            guestView: "browse",
+            user: u,
+            msgCount,
+            title: "Discover professionals",
+            bodyHtml: body
+          });
+          bindGuestEvents();
+          return;
+        }
+
+        const matches = await WeLink.matchForGuest(u, { includeSamples: false });
+        app.innerHTML = G.layoutHome({
+          user: u,
+          matches,
+          commHtmlFn: guestCommHtml,
+          db,
+          guestId: s.id,
+          locationLine: guestLocationLabel(u)
+        });
+        bindGuestEvents();
+      }
+
+      function bindGuestEditForm() {
+        const form = document.getElementById("guest-edit-form");
+        if (!form) return;
+        const preview = document.getElementById("guest-edit-preview");
+        form.photo?.addEventListener("change", async (e) => {
+          try {
+            const data = await H.fileToData(e.target.files[0]);
+            if (data && preview) preview.src = data;
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const errEl = document.getElementById("guest-edit-err");
+          const btn = form.querySelector('[type="submit"]');
+          errEl.hidden = true;
+          btn.disabled = true;
+          let photo = "";
+          try {
+            if (form.photo.files[0]) photo = await H.fileToData(form.photo.files[0]);
+          } catch (err) {
+            errEl.hidden = false;
+            errEl.textContent = err.message;
+            btn.disabled = false;
+            return;
+          }
+          const res = await WeLink.updateGuestProfile(s.id, {
+            name: form.name.value,
+            age: form.age.value,
+            town: form.town.value,
+            area: form.area.value,
+            specialization: form.specialization.value,
+            skills: form.skills.value,
+            photo
+          });
+          if (!res.ok) {
+            errEl.hidden = false;
+            errEl.textContent = res.error;
+            btn.disabled = false;
+            return;
+          }
+          guestView = "home";
+          renderGuest();
+        });
+      }
+
+      function bindGuestEvents() {
+        app.querySelectorAll("[data-guest-view]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            leaveChat();
+            stopEventCountdown();
+            guestView = btn.dataset.guestView;
+            if (guestView !== "detail" && guestView !== "chat") selectedProId = null;
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-guest-logout]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await WeLink.logout();
+            location.href = "login.html?role=guest";
+          });
+        });
+        app.querySelectorAll("[data-guest-soon]").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          });
+        });
+        const searchForm = app.querySelector("[data-guest-search-form]");
+        searchForm?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const q = searchForm.querySelector("input[name=q]");
+          browseSearch = q?.value || "";
+          guestView = "browse";
+          renderGuest();
+        });
+        app.querySelectorAll("[data-pro-detail]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedProId = btn.dataset.proDetail;
+            guestView = "detail";
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-comm-req]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.requestGuestCommunication(s.id, btn.dataset.commReq);
+            alert(res.ok ? "Request sent. The professional and admin have been notified." : res.error);
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-cancel-comm]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.cancelCommunication(btn.dataset.cancelComm, s.id);
+            if (!res.ok) return alert(res.error);
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-open-chat]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedProId = btn.dataset.openChat;
+            guestView = "chat";
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-request-admin-support]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.requestAdminSupport();
+            alert(res.ok ? "Request sent. Admin will approve or start a conversation with you." : res.error);
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-cancel-admin-support]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.cancelAdminSupportRequest(btn.dataset.cancelAdminSupport);
+            if (!res.ok) return alert(res.error);
+            renderGuest();
+          });
+        });
+        app.querySelectorAll("[data-open-admin-chat]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            leaveChat();
+            guestView = "admin-chat";
+            renderGuest();
+          });
+        });
+        const searchEl = app.querySelector("#browse-search");
+        const skillEl = app.querySelector("#browse-skill");
+        searchEl?.addEventListener("input", () => {
+          browseSearch = searchEl.value;
+          renderGuest();
+        });
+        skillEl?.addEventListener("change", () => {
+          browseSkill = skillEl.value;
+          renderGuest();
+        });
+      }
+
+      function proMsgCount(db) {
+        const guestComm = (db?.communicationRequests || []).filter(
+          (r) => r.proId === s.id && (r.status === "pending" || r.status === "accepted")
+        ).length;
+        const adminPending = WeLink.getAdminSupportRequestForUser(s.id)?.status === "pending" ? 1 : 0;
+        return guestComm + adminPending;
+      }
+
+      function renderProCommList(db, limit) {
+        let reqs = db.communicationRequests.filter((r) => r.proId === s.id)
+          .sort((a, b) => b.createdAt - a.createdAt);
+        if (limit) reqs = reqs.slice(0, limit);
+        if (!reqs.length) return `<p class="pd-empty">No guest communication requests yet.</p>`;
+        return reqs.map((r) => {
+          const canChat = WeLink.canPrivateChat(r.guestId, s.id);
+          return `<div class="comm-item pd-comm-item">
+            <img src="${H.avatarUrl({ photo: r.guestPhoto, name: r.guestName })}" alt="" />
+            <div>
+              <strong>${H.esc(r.guestName)}</strong>
+              <span class="status-pill status-${r.status}">${H.statusBadge(r.status === "pending" ? "pending" : r.status)}</span>
+              <p class="pd-muted" style="margin:4px 0 0;font-size:12px">${r.status === "pending" ? "Waiting for admin approval." : r.status === "accepted" ? "Admin approved — you can chat." : ""}</p>
+              <div class="comm-actions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+                ${canChat ? `<button class="pd-btn-gold pd-btn-sm" type="button" data-open-guest-chat="${r.guestId}">Open chat</button>` : ""}
+              </div>
+            </div>
+          </div>`;
+        }).join("");
+      }
+
+      function renderProActivity(db) {
+        const reqs = db.communicationRequests.filter((r) => r.proId === s.id)
+          .sort((a, b) => b.createdAt - a.createdAt)
+          .slice(0, 4);
+        if (!reqs.length) {
+          return `<li><span class="pd-act-dot"></span><div><strong>Welcome to WeLink</strong><span>Your activity will appear here</span></div></li>`;
+        }
+        return reqs.map((r) => {
+          const label = r.status === "accepted"
+            ? `Chat approved with ${r.guestName}`
+            : r.status === "pending"
+              ? `Request from ${r.guestName} pending admin`
+              : `Update from ${r.guestName}`;
+          return `<li><span class="pd-act-dot"></span><div><strong>${H.esc(label)}</strong><span>${H.fmtTime(r.createdAt)}</span></div></li>`;
+        }).join("");
+      }
+
+      function proStats(db) {
+        const connections = (db.connections || []).filter((c) => c.proId === s.id).length;
+        const commActive = db.communicationRequests.filter((r) => r.proId === s.id && r.status === "accepted").length;
+        const events = (db.events || []).filter((e) => e.proId === s.id && e.status === "scheduled").length;
+        return {
+          connections: connections || commActive,
+          events,
+          learning: 2
+        };
+      }
+
+      function bindProEventHandlers() {
+        document.getElementById("evt-schedule-form")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const errEl = document.getElementById("evt-schedule-err");
+          errEl.hidden = true;
+          const res = await WeLink.scheduleEvent(s.id, {
+            title: form.title.value,
+            description: form.description.value,
+            eventAt: form.eventAt.value
+          });
+          if (!res.ok) {
+            errEl.hidden = false;
+            errEl.textContent = res.error;
+            return;
+          }
+          eventEditId = null;
+          renderPro();
+        });
+        app.querySelectorAll("button[data-event-edit]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            eventEditId = btn.getAttribute("data-event-edit");
+            renderPro();
+          });
+        });
+        app.querySelector("[data-event-edit-cancel]")?.addEventListener("click", () => {
+          eventEditId = null;
+          renderPro();
+        });
+        app.querySelectorAll("form[data-event-edit]").forEach((form) => {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = form.getAttribute("data-event-edit");
+            const res = await WeLink.updateScheduledEvent(s.id, id, {
+              title: form.title.value,
+              description: form.description.value,
+              eventAt: form.eventAt.value
+            });
+            if (!res.ok) return alert(res.error);
+            eventEditId = null;
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-event-status]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const id = btn.getAttribute("data-event-status");
+            const status = btn.getAttribute("data-status");
+            const res = await WeLink.setEventStatus(s.id, id, status);
+            if (!res.ok) return alert(res.error);
+            renderPro();
+          });
+        });
+      }
+
+      async function renderPro() {
+        const db = await WeLink.load();
+        const p = await WeLink.getPro(s.id);
+        const P = WeLinkProUI;
+        const msgCount = proMsgCount(db);
+
+        if (proView === "events") {
+          stopEventCountdown();
+          const events = (db.events || []).filter((e) => e.proId === s.id);
+          app.innerHTML = P.layoutInner({
+            proView: "events",
+            pro: p,
+            msgCount,
+            title: "Events",
+            innerHtml: WeLinkEventsUI.proEventsPage(events, s.id, { editingId: eventEditId })
+          });
+          bindProEvents();
+          bindProEventHandlers();
+          startEventCountdown();
+          return;
+        }
+
+        if (proView === "edit" && p.status !== "rejected") {
+          app.innerHTML = P.layoutInner({
+            proView: "home",
+            pro: p,
+            msgCount,
+            title: "Edit profile",
+            innerHtml: P.editProfileForm(p)
+          });
+          bindProEvents();
+          bindProEditForm();
+          return;
+        }
+
+        if (p.status === "pending") {
+          leaveChat();
+          proView = "home";
+          selectedProId = null;
+          app.innerHTML = P.pendingLayout(p);
+          bindProEvents();
+          return;
+        }
+
+        if (p.status === "rejected") {
+          leaveChat();
+          proView = "home";
+          selectedProId = null;
+          const inner = `<p class="err">Your request was rejected.${p.rejectionReason ? " Reason: " + H.esc(p.rejectionReason) : ""}</p>
+            <form id="reup" class="card pd-panel" style="margin-top:16px">
+              <label>Full name <input name="name" value="${H.esc(p.name)}" required /></label>
+              <label class="skills-picker-label">Skills
+                <span class="pd-muted" style="font-weight:500;font-size:12px">Search or type custom skills.</span>
+                <div id="pro-resubmit-skills" data-skills-picker></div>
+              </label>
+              <label>Location <input name="location" value="${H.esc(p.location)}" required /></label>
+              <label>Phone (WhatsApp) <input name="phone" value="${H.esc(p.phone)}" placeholder="+237..." /></label>
+              <label>Bio <textarea name="bio" required>${H.esc(p.bio)}</textarea></label>
+              <label>Achievements <textarea name="achievements">${H.esc(p.achievements)}</textarea></label>
+              <label>Photo <input type="file" name="photo" accept="image/*" /></label>
+              <button class="pd-btn-gold" type="submit">Re-upload request</button>
+            </form>`;
+          app.innerHTML = P.layoutInner({ proView: "home", pro: p, msgCount: 0, title: "Re-submit application", innerHtml: inner });
+          bindProEvents();
+          mountProSkillsPicker(document.getElementById("pro-resubmit-skills"), p);
+          return;
+        }
+
+        if (p.status === "suspended" || p.status === "deactivated") {
+          app.innerHTML = P.layoutInner({
+            proView: "home",
+            pro: p,
+            msgCount: 0,
+            title: "Account restricted",
+            innerHtml: `<p class="err">Your account is ${H.esc(p.status)}. Contact admin for assistance.</p>`
+          });
+          bindProEvents();
+          return;
+        }
+
+        if (p.status === "approved") {
+          const allPros = await WeLink.publicProProfiles(s.id);
+          const filtered = D.filterPros(allPros, { search: browseSearch, skill: browseSkill });
+          const stats = proStats(db);
+
+          if (proView === "admin-chat") {
+            const inner = `<button class="pd-back" type="button" data-pro-view="messages">← Messages</button>
+              <h2 style="margin:0 0 16px">Chat with admin</h2>
+              ${await renderAdminSupportChatRoom()}`;
+            app.innerHTML = P.layoutInner({ proView: "messages", pro: p, msgCount, title: "", innerHtml: inner });
+            bindProEvents();
+            const conv = WeLink.getActiveAdminSupportConversation(s.id);
+            if (conv) bindAdminSupportChatRoom(conv);
+            return;
+          }
+
+          if (proView === "chat" && selectedGuestId) {
+            const guest = db.guests.find((g) => g.id === selectedGuestId) || (await WeLink.getGuest(selectedGuestId));
+            const inner = `<button class="pd-back" type="button" data-pro-view="messages">← Messages</button>
+              <h2 style="margin:0 0 16px">Chat with ${H.esc(guest?.name || "Guest")}</h2>
+              ${await renderChatRoom(guest, selectedGuestId, s.id)}`;
+            app.innerHTML = P.layoutInner({ proView: "messages", pro: p, msgCount, title: "", innerHtml: inner });
+            bindProEvents();
+            const conv = WeLink.getActiveConversation(selectedGuestId, s.id);
+            if (conv) bindChatRoom(selectedGuestId, s.id, conv);
+            return;
+          }
+
+          if (proView === "messages") {
+            app.innerHTML = P.layoutInner({
+              proView: "messages",
+              pro: p,
+              msgCount,
+              title: "Messages",
+              innerHtml: `<div class="pd-panel">${adminSupportInboxHtml()}${renderProCommList(db)}</div>`
+            });
+            bindProEvents();
+            return;
+          }
+
+          if (proView === "detail" && selectedProId) {
+            const peer = allPros.find((x) => x.id === selectedProId) || (await WeLink.getPro(selectedProId));
+            const inner = `<button class="pd-back" type="button" data-pro-view="browse">← Network</button>
+              ${peer ? D.renderProDetail(peer, "Discovery only — no communication between professionals") : `<p class="err">Profile not found.</p>`}`;
+            app.innerHTML = P.layoutInner({ proView: "browse", pro: p, msgCount, title: "Professional profile", innerHtml: inner });
+            bindProEvents();
+            return;
+          }
+
+          if (proView === "browse") {
+            const grid = filtered.length
+              ? `<div class="pd-pro-grid">${filtered.map((x) => D.renderProCard(x, { detailBtn: true, compact: true })).join("")}</div>`
+              : `<p class="pd-empty">No other approved professionals match your filters.</p>`;
+            const inner = `${D.renderBrowseToolbar({ search: browseSearch, skill: browseSkill, skills: WeLink.SKILLS })}${grid}`;
+            app.innerHTML = P.layoutInner({ proView: "browse", pro: p, msgCount, title: "Network", innerHtml: inner });
+            bindProEvents();
+            return;
+          }
+
+          app.innerHTML = P.layoutHome({
+            pro: p,
+            proView: proView || "home",
+            msgCount,
+            db,
+            commHtml: renderProCommList(db, 3),
+            stats,
+            activityHtml: renderProActivity(db)
+          });
+          bindProEvents();
+          return;
+        }
+
+        app.innerHTML = P.layoutInner({
+          proView: "home",
+          pro: p,
+          msgCount: 0,
+          title: H.esc(p.name),
+          innerHtml: `<p class="pd-muted">Status: ${H.esc(p.status)}</p>`
+        });
+        bindProEvents();
+      }
+
+      function mountProSkillsPicker(host, pro) {
+        if (!host || !window.WeLinkSkillsPicker) return null;
+        const initial = WeLinkSkillsPicker.parseSkillsString(pro?.skills || pro?.skill || "");
+        return WeLinkSkillsPicker.mount(host, {
+          catalog: WeLink.SKILLS,
+          inputName: "skills",
+          required: true,
+          initial,
+          placeholder: "Search or add a skill…"
+        });
+      }
+
+      function bindProEditForm() {
+        const form = document.getElementById("pro-edit-form");
+        if (!form) return;
+        WeLink.getPro(s.id).then((pro) => {
+          mountProSkillsPicker(document.getElementById("pro-edit-skills"), pro);
+        });
+        const preview = document.getElementById("pro-edit-preview");
+        form.photo?.addEventListener("change", async (e) => {
+          try {
+            const data = await H.fileToData(e.target.files[0]);
+            if (data && preview) preview.src = data;
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const errEl = document.getElementById("pro-edit-err");
+          const btn = form.querySelector('[type="submit"]');
+          errEl.hidden = true;
+          btn.disabled = true;
+          let photo = "";
+          try {
+            if (form.photo.files[0]) photo = await H.fileToData(form.photo.files[0]);
+          } catch (err) {
+            errEl.hidden = false;
+            errEl.textContent = err.message;
+            btn.disabled = false;
+            return;
+          }
+          const skills = WeLinkSkillsPicker.readFromForm(form);
+          if (!skills.length) {
+            errEl.hidden = false;
+            errEl.textContent = "Add at least one skill.";
+            btn.disabled = false;
+            return;
+          }
+          const skillPayload = WeLinkSkillsPicker.proSkillPayload(skills);
+          const res = await WeLink.updateProfessionalProfile(s.id, {
+            name: form.name.value,
+            skill: skillPayload.skill,
+            skills: skillPayload.skills,
+            location: form.location.value,
+            phone: form.phone.value,
+            bio: form.bio.value,
+            achievements: form.achievements.value,
+            photo
+          });
+          if (!res.ok) {
+            errEl.hidden = false;
+            errEl.textContent = res.error;
+            btn.disabled = false;
+            return;
+          }
+          proView = "home";
+          renderPro();
+        });
+      }
+
+      function bindProEvents() {
+        app.querySelectorAll("[data-pro-view]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            leaveChat();
+            stopEventCountdown();
+            proView = btn.dataset.proView;
+            if (proView !== "detail") selectedProId = null;
+            if (proView !== "chat") selectedGuestId = null;
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-pro-soon]").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          });
+        });
+        app.querySelectorAll("[data-pro-logout]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await WeLink.logout();
+            location.href = "login.html?role=professional";
+          });
+        });
+        const searchForm = app.querySelector("[data-pro-search-form]");
+        searchForm?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          browseSearch = searchForm.querySelector("input[name=q]")?.value || "";
+          proView = "browse";
+          renderPro();
+        });
+        app.querySelectorAll("[data-pro-detail]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedProId = btn.dataset.proDetail;
+            proView = "detail";
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-open-guest-chat]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedGuestId = btn.dataset.openGuestChat;
+            proView = "chat";
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-request-admin-support]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.requestAdminSupport();
+            alert(res.ok ? "Request sent. Admin will approve or start a conversation with you." : res.error);
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-cancel-admin-support]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const res = await WeLink.cancelAdminSupportRequest(btn.dataset.cancelAdminSupport);
+            if (!res.ok) return alert(res.error);
+            renderPro();
+          });
+        });
+        app.querySelectorAll("[data-open-admin-chat]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            leaveChat();
+            proView = "admin-chat";
+            renderPro();
+          });
+        });
+        const searchEl = app.querySelector("#browse-search");
+        const skillEl = app.querySelector("#browse-skill");
+        searchEl?.addEventListener("input", () => {
+          browseSearch = searchEl.value;
+          renderPro();
+        });
+        skillEl?.addEventListener("change", () => {
+          browseSkill = skillEl.value;
+          renderPro();
+        });
+        document.getElementById("reup")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const f = e.target;
+          let photo;
+          if (f.photo.files[0]) photo = await H.fileToData(f.photo.files[0]);
+          const skills = WeLinkSkillsPicker.readFromForm(f);
+          if (!skills.length) {
+            alert("Add at least one skill.");
+            return;
+          }
+          const skillPayload = WeLinkSkillsPicker.proSkillPayload(skills);
+          const res = await WeLink.resubmitPro(s.id, {
+            name: f.name.value,
+            skill: skillPayload.skill,
+            skills: skillPayload.skills,
+            location: f.location.value,
+            bio: f.bio.value,
+            achievements: f.achievements.value,
+            phone: f.phone.value,
+            photo
+          });
+          if (res.ok) { await WeLink.emailAdmin(res.account); WeLink.notifyAdminWhatsApp(res.account); }
+          location.reload();
+        });
+      }
+
+      if (s.role === "guest") await renderGuest();
+      else await renderPro();
+
+      WeLink.onChange(() => {
+        if (guestView === "admin-chat" || proView === "admin-chat") {
+          const conv = WeLink.getActiveAdminSupportConversation(s.id);
+          if (conv && conv.id === activeAdminSupportConversationId) return;
+        }
+        if (guestView === "chat" || proView === "chat") {
+          const guestId = s.role === "guest" ? s.id : selectedGuestId;
+          const proId = s.role === "guest" ? selectedProId : s.id;
+          const conv = guestId && proId ? WeLink.getActiveConversation(guestId, proId) : null;
+          if (conv && conv.id === activeChatConversationId) return;
+        }
+        if (s.role === "guest") renderGuest();
+        else renderPro();
+      });
+    })();
+  </script>
+</body>
+</html>

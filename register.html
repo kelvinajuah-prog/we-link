@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register — WE-LINK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+</head>
+<body class="welink-cinematic">
+  <header data-header></header>
+  <main class="page wrap">
+    <h1>Create your <span class="gold">account</span></h1>
+    <p class="lede">Choose how you want to join. Seekers get instant access. Professionals need admin review before going live.</p>
+    <div class="choice">
+      <a class="ix" href="register-seeker.html">
+        <span class="badge">No fee · no admin wait</span>
+        <h2>Register as a user</h2>
+        <p class="muted">Job and professional seekers create a profile (name, age, specialisation, skills, photo) and see matching talent.</p>
+      </a>
+      <a class="ix" href="register-pro.html">
+        <span class="badge">Admin review</span>
+        <h2>Register as a professional</h2>
+        <p class="muted">Share your skill, name, location and achievements. Admin reviews and approves your profile.</p>
+      </a>
+      <a class="ix" href="register-admin.html">
+        <span class="badge">Manual approval</span>
+        <h2>Register as admin</h2>
+        <p class="muted">Create an account; the platform owner promotes you to admin in Supabase before you can sign in.</p>
+      </a>
+    </div>
+    <p class="muted" style="margin-top:20px">Already registered? <a class="gold" href="login.html">Log in</a></p>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/store.js?v=auth-fix-7"></script>
+  <script src="js/ui.js"></script>
+  <script>(async () => { await WeLink.ready; WeLinkUI.renderHeader(document.querySelector("[data-header]")); })();</script>
+</body>
+</html>

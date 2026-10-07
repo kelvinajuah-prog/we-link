@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WE-LINK — Find Local Talent. Get Things Done.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/brand-logo.css" />
+  <link rel="stylesheet" href="css/welink-design-tokens.css" />
+  <link rel="stylesheet" href="css/welink-landing-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+  <link rel="stylesheet" href="css/welink-skill-labels.css" />
+  <style>
+    :root {
+      --bg: var(--wl-canvas);
+      --surface: var(--wl-canvas-soft);
+      --card: var(--wl-surface-card);
+      --ink: var(--wl-ink);
+      --muted: var(--wl-muted);
+      --muted-2: var(--wl-body);
+      --line: var(--wl-hairline);
+      --line-strong: var(--wl-hairline-strong);
+      --brand: var(--wl-primary);
+      --brand-2: var(--wl-primary-active);
+      --brand-ink: var(--wl-on-primary);
+      --shadow: var(--wl-shadow-card);
+      --radius: 16px;
+      --radius-sm: 12px;
+      --radius-pill: 999px;
+      --page-gutter: clamp(20px, 4vw, 56px);
+      --header-h: 76px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; width: 100%; }
+    body {
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-width: 320px;
+      width: 100%;
+    }
+    body.welink-cinematic {
+      background: transparent;
+      color: var(--cin-ink, var(--ink));
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; }
+    main { width: 100%; }
+    section { width: 100%; }
+    .wrap {
+      width: 100%;
+      max-width: none;
+      margin-inline: auto;
+      padding-inline: var(--page-gutter);
+    }
+    .gold { color: var(--brand); }
+
+    .ix { transition: transform .14s ease, background-color .16s, border-color .16s, color .16s, opacity .16s, box-shadow .16s; }
+    .ix:active { transform: translateY(1px) scale(.985); }
+    :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .ix, .ix:active { transition: none; transform: none; }
+      .chat-panel.open, .chat-panel.closing { animation: none; opacity: 1; }
+      .chat-panel.closing { opacity: 0; visibility: hidden; }
+      .chat-fab[aria-expanded="true"] { transform: none; }
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      height: var(--header-h);
+      background: rgba(0,0,0,.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      height: var(--header-h);
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+      font-weight: 700; font-size: 18px; letter-spacing: -0.02em;
+    }
+    .logo-mark {
+      width: 28px; height: 28px;
+      display: block;
+      object-fit: contain;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 22px;
+      font-size: 13.5px; font-weight: 500; color: #ececec;
+    }
+    .nav-links a { position: relative; padding: 6px 0; }
+    .nav-links a:hover { color: var(--brand); }
+    .nav-links a.active { color: var(--brand); }
+    .nav-links a.active::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 2px; background: var(--brand); border-radius: 2px;
+    }
+    .nav-cta { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .nav-cta .login {
+      white-space: nowrap;
+      max-width: min(220px, 42vw);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: 0; cursor: pointer; font-weight: 700; border-radius: 10px;
+      padding: 12px 20px; font-size: 14px; line-height: 1;
+    }
+    .btn-primary { background: var(--brand); color: var(--brand-ink); }
+    .btn-primary:hover { background: #ffd34a; }
+    .btn-ghost {
+      background: transparent; color: var(--ink);
+      border: 1.5px solid rgba(255,255,255,.85);
+    }
+    .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-sm { padding: 10px 16px; font-size: 13.5px; border-radius: 9px; }
+    .menu-toggle {
+      display: none; background: none; border: 0; color: #fff; cursor: pointer; padding: 8px;
+    }
+
+    /* Hero */
+    .hero { padding: 56px 0 28px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: clamp(24px, 4vw, 48px);
+      align-items: center;
+      width: 100%;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(245,197,24,.35);
+      background: rgba(245,197,24,.06);
+      color: #e8e8e8; font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; padding: 6px 12px; border-radius: var(--radius-pill);
+    }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+    .hero h1 {
+      margin-top: 22px; font-size: clamp(36px, 4.4vw, 58px);
+      line-height: 1.08; letter-spacing: -0.035em; font-weight: 800;
+    }
+    .hero-lead {
+      margin-top: 18px; max-width: 460px; color: var(--muted-2);
+      font-size: 15.5px; line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+      margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line);
+    }
+    .hero-stat { display: flex; gap: 8px; align-items: flex-start; }
+    .hero-stat svg { flex-shrink: 0; margin-top: 2px; color: var(--brand); }
+    .hero-stat b { display: block; font-size: 13px; font-weight: 700; }
+    .hero-stat span { display: block; font-size: 11px; color: var(--muted); line-height: 1.3; }
+
+    .hero-visual { position: relative; min-height: 520px; }
+    .glow-ring {
+      position: absolute; inset: 8% 6% 6% 10%;
+      border-radius: 50%;
+      border: 2px solid rgba(245,197,24,.28);
+      box-shadow: 0 0 80px rgba(245,197,24,.18), inset 0 0 60px rgba(245,197,24,.06);
+      pointer-events: none;
+    }
+    .glow-ring::after {
+      content: ""; position: absolute; inset: 18px;
+      border-radius: 50%; border: 1px solid rgba(245,197,24,.18);
+    }
+    .hero-photo {
+      position: relative; z-index: 1;
+      width: min(78%, 380px); margin: 20px auto 0;
+      aspect-ratio: 3/4; object-fit: cover; object-position: center top;
+      border-radius: 24px; filter: contrast(1.05);
+      mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+    }
+    .float-card {
+      position: absolute; z-index: 2;
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(18,18,18,.82); backdrop-filter: blur(16px);
+      border: 1px solid var(--line-strong);
+      border-radius: 14px; padding: 8px 12px 8px 8px;
+      box-shadow: var(--shadow); min-width: 168px;
+    }
+    .float-card img {
+      width: 42px; height: 42px; border-radius: 10px; object-fit: cover;
+    }
+    .float-card strong { display: block; font-size: 13px; font-weight: 700; }
+    .float-card em { font-style: normal; color: var(--muted); font-size: 11.5px; }
+    .star { color: var(--brand); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+    .fc-hair { top: 8%; left: 0; }
+    .fc-model { top: 4%; right: 0; }
+    .fc-pastry { top: 38%; left: -8px; }
+    .fc-ball { bottom: 22%; left: 4%; }
+    .ai-card {
+      position: absolute; z-index: 2; right: 0; bottom: 8%;
+      width: 188px; background: rgba(16,16,16,.88); backdrop-filter: blur(16px);
+      border: 1px solid var(--line-strong); border-radius: 16px; padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .ai-card h3 { font-size: 13px; margin-bottom: 12px; font-weight: 700; }
+    .ai-row { display: flex; justify-content: space-between; gap: 8px; }
+    .ai-person { text-align: center; }
+    .ai-person img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin: 0 auto 6px; border: 2px solid rgba(245,197,24,.4); }
+    .ai-person .star { font-size: 10px; }
+
+    /* Categories */
+    section { padding: 72px 0; }
+    .section-title {
+      text-align: center; font-size: clamp(28px, 3vw, 40px);
+      letter-spacing: -0.03em; font-weight: 800; margin-bottom: 36px;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+      gap: 18px;
+      width: 100%;
+    }
+      .cat-card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 18px; padding: 24px 22px 20px; min-height: 148px;
+    }
+    .cat-card:hover { border-color: rgba(245,197,24,.4); transform: translateY(-2px); }
+    .icon-box {
+      width: 40px; height: 40px; color: var(--brand); margin-bottom: 16px;
+    }
+    .cat-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .cat-card p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .explore {
+      display: flex; justify-content: center; margin-top: 28px;
+      color: var(--brand); font-weight: 700; font-size: 15px; gap: 6px;
+    }
+    .explore:hover { opacity: .85; }
+
+    /* AI */
+    .ai-section .lede {
+      text-align: center; color: var(--muted); max-width: 520px;
+      margin: -18px auto 40px; font-size: 15.5px;
+    }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: 28px;
+      width: 100%;
+    }
+    .ai-feat h3 { font-size: 16px; font-weight: 700; margin: 12px 0 8px; }
+    .ai-feat p { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+    .ai-feat svg { color: var(--brand); }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+      gap: 16px;
+      position: relative;
+      margin-top: 12px;
+      width: 100%;
+    }
+    .steps::before {
+      content: ""; position: absolute; top: 16px; left: 12%; right: 12%;
+      border-top: 1.5px dashed rgba(245,197,24,.45); z-index: 0;
+    }
+    .step { text-align: center; position: relative; z-index: 1; }
+    .step-num {
+      width: 32px; height: 32px; margin: 0 auto 18px; border-radius: 50%;
+      background: var(--brand); color: #111; font-weight: 800; font-size: 14px;
+      display: grid; place-items: center;
+    }
+    .step-icon {
+      width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%;
+      border: 1px solid var(--line-strong); background: #0a0a0a;
+      display: grid; place-items: center; color: var(--brand);
+    }
+    .step h3 { font-size: 16px; font-weight: 700; }
+    .step p { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    /* Mid stats */
+    .mid-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+      gap: 24px;
+      padding: 28px 0 8px;
+      width: 100%;
+    }
+    .mid-stat { display: flex; align-items: center; gap: 14px; }
+    .mid-stat svg { color: var(--brand); flex-shrink: 0; }
+    .mid-stat b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+    .mid-stat span { color: var(--muted); font-size: 13px; }
+
+    /* Testimonials */
+    .quotes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: 18px;
+      width: 100%;
+    }
+    .quote {
+      background: #141414; border: 1px solid var(--line);
+      border-radius: 18px; padding: 26px 24px 22px; display: flex; flex-direction: column;
+    }
+    .quote-mark { color: var(--brand); margin-bottom: 14px; }
+    .quote p { color: #d8d8d8; font-size: 14.5px; line-height: 1.6; flex: 1; }
+    .quote-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-top: 22px;
+    }
+    .who { display: flex; align-items: center; gap: 10px; }
+    .who img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .who b { display: block; font-size: 13.5px; }
+    .who span { color: var(--muted); font-size: 12px; }
+    .stars { color: var(--brand); letter-spacing: 1px; font-size: 12px; }
+    .dots { display: flex; justify-content: center; gap: 8px; margin-top: 26px; }
+    .dots button {
+      width: 8px; height: 8px; border-radius: 50%; border: 0; cursor: pointer;
+      background: #3a3a3a;
+    }
+    .dots button.active { background: var(--brand); width: 22px; border-radius: 99px; }
+
+    /* CTA */
+    .cta { text-align: center; padding-top: 40px; }
+    .cta h2 { font-size: clamp(28px, 3.2vw, 42px); font-weight: 800; letter-spacing: -0.03em; }
+    .cta .lede { color: var(--muted); margin: 12px 0 26px; }
+    .cta-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    .trust { text-align: center; padding: 48px 0 24px; }
+    .trust p { color: #888; font-size: 13px; margin-bottom: 22px; letter-spacing: .04em; }
+    .logos {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+      gap: 36px 44px; opacity: .72; filter: grayscale(1);
+    }
+    .logos svg { height: 22px; width: auto; fill: #cfcfcf; }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--line); padding: 56px 0 28px; margin-top: 24px;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: minmax(200px, 1.3fr) repeat(4, minmax(0, 1fr));
+      gap: 32px;
+      width: 100%;
+    }
+    .foot-about p { color: var(--muted); font-size: 13.5px; margin: 14px 0 18px; max-width: 260px; line-height: 1.6; }
+    .socials { display: flex; gap: 10px; }
+    .socials a {
+      width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-strong);
+      display: grid; place-items: center; color: #ddd;
+    }
+    .socials a:hover { border-color: var(--brand); color: var(--brand); }
+    .site-footer h4 { font-size: 14px; margin-bottom: 14px; font-weight: 700; }
+    .site-footer ul { list-style: none; display: grid; gap: 10px; }
+    .site-footer li a { color: var(--muted); font-size: 13.5px; }
+    .site-footer li a:hover { color: var(--brand); }
+    .copy { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); color: #666; font-size: 12.5px; }
+
+    .mobile-panel { display: none; }
+
+    /* Chatbot */
+    .chat-fab {
+      position: fixed; right: 22px; bottom: 22px; z-index: 82;
+      width: 58px; height: 58px; border: 0; border-radius: 50%;
+      background: var(--brand); color: #111; cursor: pointer;
+      box-shadow: 0 10px 28px rgba(245,197,24,.35);
+      display: grid; place-items: center;
+      transition: transform .35s ease, background-color .16s;
+    }
+    .chat-fab:hover { background: #ffd34a; }
+    .chat-fab[aria-expanded="true"] { transform: rotate(135deg); }
+    .chat-fab .icon-close { display: none; }
+    .chat-fab[aria-expanded="true"] .icon-open { display: none; }
+    .chat-fab[aria-expanded="true"] .icon-close { display: block; }
+    .chat-unread {
+      position: absolute; top: 4px; right: 4px; width: 10px; height: 10px;
+      background: #ff4d4d; border-radius: 50%; border: 2px solid #111;
+    }
+    @keyframes chat-spin-in {
+      from { transform: rotate(-220deg) scale(.08); opacity: 0; }
+      to { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+    @keyframes chat-spin-out {
+      from { transform: rotate(0deg) scale(1); opacity: 1; }
+      to { transform: rotate(220deg) scale(.08); opacity: 0; }
+    }
+    .chat-panel {
+      position: fixed; right: 22px; bottom: 92px; z-index: 81;
+      width: min(380px, calc(100vw - 24px)); height: min(520px, calc(100vh - 128px));
+      background: #0d0d0d; border: 1px solid var(--line-strong);
+      border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; overflow: hidden;
+      transform-origin: bottom right;
+      opacity: 0; pointer-events: none; visibility: hidden;
+    }
+    .chat-panel.open {
+      visibility: visible; pointer-events: auto;
+      animation: chat-spin-in .48s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .chat-panel.closing {
+      visibility: visible; pointer-events: none;
+      animation: chat-spin-out .42s ease-in forwards;
+    }
+    .chat-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; padding: 14px 14px 12px; background: #111;
+      border-bottom: 1px solid var(--line);
+    }
+    .chat-id { display: flex; align-items: center; gap: 10px; }
+    .chat-id .logo-mark { width: 32px; height: 32px; }
+    .chat-id b { display: block; font-size: 14px; }
+    .chat-id span { color: var(--muted); font-size: 11.5px; }
+    .ai-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--brand); font-size: 11px; font-weight: 700;
+    }
+    .ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #3ddc84; }
+    .chat-x {
+      background: none; border: 0; color: #ccc; cursor: pointer; padding: 6px; border-radius: 8px;
+    }
+    .chat-x:hover { color: var(--brand); background: #1a1a1a; }
+    .chat-log {
+      flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .bubble {
+      max-width: 88%; padding: 10px 12px; border-radius: 14px;
+      font-size: 13.5px; line-height: 1.5; white-space: pre-wrap;
+    }
+    .bubble.bot { background: #171717; color: #eee; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble.user { background: var(--brand); color: #111; border-bottom-right-radius: 4px; align-self: flex-end; font-weight: 600; }
+    .bubble.typing { color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 10px; }
+    .chip {
+      border: 1px solid var(--line-strong); background: #141414; color: #ddd;
+      border-radius: 999px; padding: 7px 10px; font-size: 12px; cursor: pointer;
+    }
+    .chip:hover { border-color: var(--brand); color: var(--brand); }
+    .chat-form {
+      display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line);
+    }
+    .chat-form input {
+      flex: 1; background: #161616; border: 1px solid var(--line-strong);
+      color: #fff; border-radius: 12px; padding: 11px 12px; font: inherit; font-size: 14px;
+    }
+    .chat-form input:focus { border-color: var(--brand); outline: none; }
+    .chat-send {
+      width: 42px; height: 42px; border: 0; border-radius: 12px;
+      background: var(--brand); color: #111; cursor: pointer; display: grid; place-items: center;
+    }
+    .chat-send:hover { background: #ffd34a; }
+    .chat-send:disabled { opacity: .5; cursor: wait; }
+    .bubble a { color: var(--brand); font-weight: 700; }
+    .contact-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .contact-actions a {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px 10px; border-radius: 9px; font-size: 12.5px; font-weight: 700;
+    }
+    .contact-actions .call { background: var(--brand); color: #111 !important; }
+    .contact-actions .wa { border: 1px solid var(--brand); color: var(--brand) !important; }
+
+    @media (max-width: 1024px) {
+      .hero-grid, .ai-grid, .steps, .mid-stats, .quotes, .foot-grid, .cat-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .steps::before { display: none; }
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: block; }
+      .hero-grid, .cat-grid, .ai-grid, .steps, .mid-stats, .quotes { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 460px; margin-top: 12px; }
+      .float-card, .ai-card { position: relative; inset: auto; margin: 10px 0 0; }
+      .hero-visual { display: flex; flex-direction: column; align-items: center; }
+      .fc-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+      .ai-card { width: 100%; }
+      .mobile-panel.open {
+        display: flex; flex-direction: column; gap: 14px;
+        padding: 16px 24px 20px; background: #0a0a0a; border-bottom: 1px solid var(--line);
+      }
+      .mobile-panel a { font-size: 15px; font-weight: 500; }
+      .mobile-panel a.login-mobile { align-self: flex-start; margin-top: 4px; }
+    }
+  </style>
+</head>
+<body class="welink-landing welink-cinematic">
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand ix welink-brand-block" href="#home" aria-label="WeLink home">
+        <img class="welink-logo welink-logo-nav" src="img/welink-logo.png" alt="WeLink — Connect · Collaborate · Grow" />
+        <span class="welink-profession-line">Fashion Designer · Dancer · Chef · Cook</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a class="active" href="#home">Home</a>
+        <a href="#services">Find Services</a>
+        <a href="professionals.html">Find Professionals</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#how">How it Works</a>
+        <a href="#about">About Us</a>
+        <a href="#blog">Blog</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="login ix btn btn-primary btn-sm" href="login.html">Log in or Register</a>
+        <button class="menu-toggle ix" type="button" aria-label="Open menu" aria-expanded="false" data-menu>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-panel wrap" data-panel>
+      <a href="#home">Home</a>
+      <a href="#services">Find Services</a>
+      <a href="professionals.html">Find Professionals</a>
+      <a href="#jobs">Jobs</a>
+      <a href="#how">How it Works</a>
+      <a href="#about">About Us</a>
+      <a href="#blog">Blog</a>
+      <a class="login-mobile ix btn btn-primary btn-sm" href="login.html">Log in or Register</a>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="badge"><span class="badge-dot"></span> LOCAL TALENT. REAL IMPACT.</span>
+          <h1>Find Local Talent.<br>Get Things <span class="gold">Done.</span></h1>
+          <p class="hero-lead">WE-LINK connects you with trusted professionals in your community. AI matches you with the best, estimates fair prices and time — so you get the job done right.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary ix" href="#services">Find a Service
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn-ghost ix" href="register-pro.html">Join as a Professional</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <div><b>10,000+</b><span>Verified Professionals</span></div>
+            </div>
+            <div class="hero-stat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div><b>25,000+</b><span>Happy Clients</span></div>
+            </div>
+            <div class="hero-stat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.2 7 22l5-3 5 3-1.2-8.8"/></svg>
+              <div><b>98%</b><span>Job Success Rate</span></div>
+            </div>
+            <div class="hero-stat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3L22 9.3l-5 4.9 1.2 7L12 17.8 5.8 21.2 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+              <div><b>4.8/5</b><span>Average Rating</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="glow-ring"></div>
+          <!-- asset: professional in dark apron — Unsplash (source crop too small/soft) -->
+          <img class="hero-photo" alt="Local professional in a dark apron" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=900&q=80" />
+          <article class="float-card fc-hair">
+            <img alt="Hair braiding" src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=120&q=80" />
+            <div><strong>Hair Braiding</strong><div class="star">★ 4.8</div></div>
+          </article>
+          <article class="float-card fc-model">
+            <img alt="Fashion designer" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=120&q=80" />
+            <div><strong>Fashion Designer</strong><div class="star">★ 4.7</div></div>
+          </article>
+          <article class="float-card fc-pastry">
+            <img alt="Web developer" src="https://images.unsplash.com/photo-1498050108183-d7afba6eab11?auto=format&fit=crop&w=120&q=80" />
+            <div><strong>Web Developer</strong><div class="star">★ 4.9</div></div>
+          </article>
+          <article class="float-card fc-ball">
+            <img alt="Mechanics" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=120&q=80" />
+            <div><strong>Mechanics</strong><div class="star">★ 4.7</div></div>
+          </article>
+          <aside class="ai-card">
+            <h3>AI Recommends</h3>
+            <div class="ai-row">
+              <div class="ai-person"><img alt="Recommended pro" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" /><div class="star">★★★★★</div></div>
+              <div class="ai-person"><img alt="Recommended pro" src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=80&q=80" /><div class="star">★★★★★</div></div>
+              <div class="ai-person"><img alt="Recommended pro" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" /><div class="star">★★★★★</div></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <h2 class="section-title">Browse <span class="gold">Popular</span> Categories</h2>
+        <div class="cat-grid">
+          <a class="cat-card ix" href="#fashion">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4h8l3 4-7 3-7-3 3-4z"/><path d="M12 11v9M9 20h6"/></svg></div>
+            <h3>Fashion Designer</h3>
+            <p>Tailors, custom outfits and more</p>
+          </a>
+          <a class="cat-card ix" href="#teaching">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V7l8-4 8 4v12"/><path d="M4 10l8 4 8-4M12 14v7"/></svg></div>
+            <h3>Teaching</h3>
+            <p>Tutors, language and school help</p>
+          </a>
+          <a class="cat-card ix" href="#agriculture">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21c-4-2-7-6-7-11a7 7 0 0 1 14 0c0 5-3 9-7 11z"/><path d="M12 11v10M9 8c1.5 1 4.5 1 6 0"/></svg></div>
+            <h3>Agriculture Expert</h3>
+            <p>Farming, crops, livestock advice</p>
+          </a>
+          <a class="cat-card ix" href="#web">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M7 9l3 3-3 3M13 15h4"/></svg></div>
+            <h3>Web Developer</h3>
+            <p>Websites, apps and digital builds</p>
+          </a>
+          <a class="cat-card ix" href="#mechanics">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a4 4 0 0 1 4 4L21 12.6l-1.4 1.4-2.3-1.2a4 4 0 0 1-4.6.3L8 18.8 5.2 16l5.7-4.7a4 4 0 0 1 .3-4.6L10 4.4 11.4 3l2.3 2.3a4 4 0 0 1 1 .7z"/></svg></div>
+            <h3>Mechanics</h3>
+            <p>Cars, bikes, engines and repairs</p>
+          </a>
+          <a class="cat-card ix" href="#hair-braiding">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="7" r="3"/><path d="M6 21c.8-4 2.8-6 6-6s5.2 2 6 6M8 13c-2 .8-3.5 2.4-4 5M16 13c2 .8 3.5 2.4 4 5"/></svg></div>
+            <h3>Hair Braiding</h3>
+            <p>Braids, twists, cornrows and more</p>
+          </a>
+          <a class="cat-card ix" href="#pastries">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c1.5 2 1.5 4 0 5 1.5-1 4-.5 5.5 1.5C19 12 16 15 12 20 8 15 5 12 6.5 9.5 8 7.5 10.5 7 12 8c-1.5-1-1.5-3 0-5z"/><path d="M8 20h8"/></svg></div>
+            <h3>Pastries</h3>
+            <p>Custom cakes, bakers and more</p>
+          </a>
+          <a class="cat-card ix" href="#basketball">
+            <div class="icon-box"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.4 4 5.5 4 9s-1.5 6.6-4 9c-2.5-2.4-4-5.5-4-9s1.5-6.6 4-9zM3 12h18"/></svg></div>
+            <h3>Basketball</h3>
+            <p>Coaches, trainers and more</p>
+          </a>
+        </div>
+        <a class="explore ix" href="#more">Explore all services
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="ai-section" id="professionals">
+      <div class="wrap">
+        <h2 class="section-title">AI That Works for <span class="gold">You</span></h2>
+        <p class="lede">Our AI technology takes the guesswork out of finding the right professional.</p>
+        <div class="ai-grid">
+          <article class="ai-feat">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6.2 6.2l2.1 2.1M15.7 15.7l2.1 2.1M17.8 6.2l-2.1 2.1M8.3 15.7l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
+            <h3>Smart Matching</h3>
+            <p>AI pairs you with the right professional based on skill, location and reviews.</p>
+          </article>
+          <article class="ai-feat">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.6 13.4A9 9 0 1 1 10.6 3.4"/><path d="M21 3v6h-6"/><path d="M9 12h2l1 2 2-4 1 2h2"/></svg>
+            <h3>Fair Price Estimation</h3>
+            <p>Get a transparent price range before you book, so there are no surprises.</p>
+          </article>
+          <article class="ai-feat">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <h3>Time Prediction</h3>
+            <p>Know how long the job will take so you can plan your day with confidence.</p>
+          </article>
+          <article class="ai-feat">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="5"/><path d="M8.4 12.8 7 21l5-2.5L17 21l-1.4-8.2"/></svg>
+            <h3>Best Provider</h3>
+            <p>Ranked by quality, reliability and past success in your community.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="wrap">
+        <h2 class="section-title">How <span class="gold">WE-LINK</span> Works</h2>
+        <div class="steps">
+          <article class="step">
+            <div class="step-num">1</div>
+            <div class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+            <h3>Tell us what you need</h3>
+            <p>Describe the job in your own words.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">2</div>
+            <div class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6.2 6.2l2.1 2.1M15.7 15.7l2.1 2.1M17.8 6.2l-2.1 2.1M8.3 15.7l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg></div>
+            <h3>AI finds the best match</h3>
+            <p>We rank trusted local professionals.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">3</div>
+            <div class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+            <h3>Book &amp; confirm</h3>
+            <p>Lock in time, price and details.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">4</div>
+            <div class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.8 2.8L16 9.5"/></svg></div>
+            <h3>Get it done</h3>
+            <p>Show up, finish the job, leave a review.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap mid-stats">
+        <div class="mid-stat">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div><b>10,000+</b><span>Verified Professionals</span></div>
+        </div>
+        <div class="mid-stat">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v4h6V3M8 12h8M8 16h5"/></svg>
+          <div><b>50,000+</b><span>Jobs Completed</span></div>
+        </div>
+        <div class="mid-stat">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 10h.01M15 10h.01"/></svg>
+          <div><b>98%</b><span>Happy Clients</span></div>
+        </div>
+        <div class="mid-stat">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 14.9 9l6.6.9-4.8 4.7 1.1 6.6L12 18.2 6.2 21.2l1.1-6.6L2.5 9.9 9.1 9 12 3z"/></svg>
+          <div><b>4.8/5</b><span>Average Rating</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">What Our <span class="gold">Clients</span> Say</h2>
+        <div class="quotes" data-quotes>
+          <article class="quote">
+            <div class="quote-mark" aria-hidden="true"><svg width="28" height="22" viewBox="0 0 28 22" fill="currentColor"><path d="M0 22V12.4C0 5.6 3.4 1.2 10.2 0l1.3 3.3C7.2 4.4 5.2 7 5.1 12.2H11V22H0Zm16 0V12.4C16 5.6 19.4 1.2 26.2 0L27.5 3.3C23.2 4.4 21.2 7 21.1 12.2H27V22H16Z"/></svg></div>
+            <p>I needed a barber for my wedding week. WE-LINK matched me in minutes and the price was exactly what the AI estimated.</p>
+            <div class="quote-foot">
+              <div class="who">
+                <img alt="David N." src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&q=80" />
+                <div><b>David N.</b><span>Yaoundé</span></div>
+              </div>
+              <div class="stars" aria-label="5 stars">★★★★★</div>
+            </div>
+          </article>
+          <article class="quote">
+            <div class="quote-mark" aria-hidden="true"><svg width="28" height="22" viewBox="0 0 28 22" fill="currentColor"><path d="M0 22V12.4C0 5.6 3.4 1.2 10.2 0l1.3 3.3C7.2 4.4 5.2 7 5.1 12.2H11V22H0Zm16 0V12.4C16 5.6 19.4 1.2 26.2 0L27.5 3.3C23.2 4.4 21.2 7 21.1 12.2H27V22H16Z"/></svg></div>
+            <p>Booked a custom cake for my daughter’s birthday. The baker was professional, on time, and it looked just like the photos.</p>
+            <div class="quote-foot">
+              <div class="who">
+                <img alt="Amina T." src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=80&q=80" />
+                <div><b>Amina T.</b><span>Douala</span></div>
+              </div>
+              <div class="stars" aria-label="5 stars">★★★★★</div>
+            </div>
+          </article>
+          <article class="quote">
+            <div class="quote-mark" aria-hidden="true"><svg width="28" height="22" viewBox="0 0 28 22" fill="currentColor"><path d="M0 22V12.4C0 5.6 3.4 1.2 10.2 0l1.3 3.3C7.2 4.4 5.2 7 5.1 12.2H11V22H0Zm16 0V12.4C16 5.6 19.4 1.2 26.2 0L27.5 3.3C23.2 4.4 21.2 7 21.1 12.2H27V22H16Z"/></svg></div>
+            <p>I joined as a coach and started getting local clients the same week. Booking is simple and the platform is easy to use.</p>
+            <div class="quote-foot">
+              <div class="who">
+                <img alt="Jean-Paul K." src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" />
+                <div><b>Jean-Paul K.</b><span>Bafoussam</span></div>
+              </div>
+              <div class="stars" aria-label="5 stars">★★★★★</div>
+            </div>
+          </article>
+        </div>
+        <div class="dots" data-dots>
+          <button type="button" class="active" aria-label="Testimonials 1"></button>
+          <button type="button" aria-label="Testimonials 2"></button>
+          <button type="button" aria-label="Testimonials 3"></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="live-pros">
+      <div class="wrap">
+        <h2 class="section-title">Registered <span class="gold">Professionals</span></h2>
+        <div class="cat-grid" id="live-pro-list"></div>
+        <a class="explore ix" href="professionals.html">See all confirmed profiles
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="cta" id="get-started">
+      <div class="wrap">
+        <h2>Ready to <span class="gold">get started?</span></h2>
+        <p class="lede">Join thousands of people using WE-LINK to get things done.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary ix" href="#services">Find a Service
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost ix" href="register-pro.html">Join as a Professional</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust" id="about">
+      <div class="wrap">
+        <p>Trusted by thousands in Africa</p>
+        <div class="logos" aria-label="Partner logos">
+          <svg viewBox="0 0 72 24" role="img" aria-label="MTN"><text x="0" y="18" font-size="18" font-weight="800" font-family="Inter,sans-serif" fill="#cfcfcf">MTN</text></svg>
+          <svg viewBox="0 0 90 24" role="img" aria-label="Orange"><text x="0" y="18" font-size="18" font-weight="700" font-family="Inter,sans-serif" fill="#cfcfcf">Orange</text></svg>
+          <svg viewBox="0 0 100 24" role="img" aria-label="Nexttel"><text x="0" y="18" font-size="18" font-weight="700" font-family="Inter,sans-serif" fill="#cfcfcf">Nexttel</text></svg>
+          <svg viewBox="0 0 130 24" role="img" aria-label="MoneyGram"><text x="0" y="18" font-size="17" font-weight="700" font-family="Inter,sans-serif" fill="#cfcfcf">MoneyGram</text></svg>
+          <svg viewBox="0 0 90 24" role="img" aria-label="PayPal"><text x="0" y="18" font-size="18" font-weight="700" font-style="italic" font-family="Inter,sans-serif" fill="#cfcfcf">PayPal</text></svg>
+          <svg viewBox="0 0 70 24" role="img" aria-label="Visa"><text x="0" y="18" font-size="20" font-weight="800" font-style="italic" font-family="Georgia,serif" fill="#cfcfcf">VISA</text></svg>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div class="foot-about">
+        <a class="brand" href="#home">
+          <img class="welink-logo welink-logo-nav" src="img/welink-logo.png" alt="WeLink — Connect · Collaborate · Grow" />
+        </a>
+        <p>WE-LINK connects communities with trusted local professionals — so you can find talent, get things done, and grow.</p>
+        <div class="socials">
+          <a class="ix" href="#fb" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4V10c0-.6.4-1 1-1z"/></svg></a>
+          <a class="ix" href="#ig" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a class="ix" href="#x" aria-label="X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14.7 10.3 22 2h-2.4l-6.2 7-5-7H2l7.7 11.1L2 22h2.4l6.7-7.6 5.3 7.6H22l-7.3-11.7Zm-1 1.4-.8-1.1L5.3 3.5h2.3l5.2 7.4.8 1.1 6.9 9.8h-2.3l-5.5-7.9Z"/></svg></a>
+          <a class="ix" href="#yt" aria-label="YouTube"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12.2s0-3.2-.4-4.6c-.2-.9-.9-1.6-1.8-1.8C19.2 5.4 12 5.4 12 5.4s-7.2 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 9 1 12.2 1 12.2s0 3.2.4 4.6c.2.9.9 1.6 1.8 1.8 1.6.4 8.8.4 8.8.4s7.2 0 8.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.4.4-4.6.4-4.6zM9.8 15.6V8.8l6.2 3.4-6.2 3.4z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>For Clients</h4>
+        <ul>
+          <li><a href="#services">Find Services</a></li>
+          <li><a href="#how">How it Works</a></li>
+          <li><a href="#about">Safety &amp; Trust</a></li>
+          <li><a href="#help">Help Center</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>For Professionals</h4>
+        <ul>
+          <li><a href="#professionals">Join as Professional</a></li>
+          <li><a href="#how">How it Works</a></li>
+          <li><a href="#guide">Professional Guide</a></li>
+          <li><a href="#earnings">Earnings</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#jobs">Careers</a></li>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#cookies">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap copy">© 2026 WE-LINK. All rights reserved.</div>
+  </footer>
+
+  <button class="chat-fab" type="button" aria-label="Open WE-LINK Assist" aria-expanded="false" data-chat-open>
+    <span class="chat-unread" data-chat-unread hidden></span>
+    <svg class="icon-open" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 1 1 18 0Z"/></svg>
+    <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <section class="chat-panel" data-chat-panel role="dialog" aria-label="WE-LINK Assist" aria-modal="true">
+    <header class="chat-head">
+      <div class="chat-id">
+        <img class="welink-logo welink-logo-chat" src="img/welink-logo.png" alt="WeLink" />
+        <div>
+          <b>WE-LINK Assist</b>
+          <span class="ai-pill"><i class="ai-dot"></i> AI online</span>
+        </div>
+      </div>
+      <button class="chat-x ix" type="button" aria-label="Close chat" data-chat-close>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+    <div class="chat-log" data-chat-log></div>
+    <div class="chips" data-chips>
+      <button class="chip ix" type="button">How does WE-LINK work?</button>
+      <button class="chip ix" type="button">Find a fashion designer</button>
+      <button class="chip ix" type="button">Speak to a human</button>
+    </div>
+    <form class="chat-form" data-chat-form>
+      <input type="text" name="q" autocomplete="off" placeholder="Ask about a skill or booking…" aria-label="Your question" />
+      <button class="chat-send ix" type="submit" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </form>
+  </section>
+
+  <script>
+    const toggle = document.querySelector("[data-menu]");
+    const panel = document.querySelector("[data-panel]");
+    toggle?.addEventListener("click", () => {
+      const open = panel.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    panel?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      panel.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }));
+
+    const quotes = [
+      [
+        { t: "I needed a barber for my wedding week. WE-LINK matched me in minutes and the price was exactly what the AI estimated.", n: "David N.", c: "Yaoundé", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&q=80" },
+        { t: "Booked a custom cake for my daughter’s birthday. The baker was professional, on time, and it looked just like the photos.", n: "Amina T.", c: "Douala", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=80&q=80" },
+        { t: "I joined as a coach and started getting local clients the same week. Booking is simple and the platform is easy to use.", n: "Jean-Paul K.", c: "Bafoussam", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" }
+      ],
+      [
+        { t: "Found a home cleaner in Yaoundé the same afternoon. Fair price, great work, and I’ll use WE-LINK again.", n: "Marie L.", c: "Yaoundé", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80" },
+        { t: "The AI estimate for my kitchen repair was spot on. The professional showed up on time and finished in a day.", n: "Samuel O.", c: "Douala", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80" },
+        { t: "As a stylist, the platform brings me clients who already know my rates. Less haggling, more work.", n: "Grace M.", c: "Bamenda", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=80&q=80" }
+      ],
+      [
+        { t: "Booked basketball coaching for my son. The coach was patient, skilled, and the scheduling was easy.", n: "Pauline E.", c: "Yaoundé", img: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=80&q=80" },
+        { t: "Modeling gigs used to be word of mouth. WE-LINK made it possible to get booked by brands in my city.", n: "Nadia F.", c: "Douala", img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=80&q=80" },
+        { t: "Pastry orders for events used to overwhelm me. Now clients book slots and I can plan my week.", n: "Rita B.", c: "Buea", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80" }
+      ]
+    ];
+    const qRoot = document.querySelector("[data-quotes]");
+    const dots = [...document.querySelectorAll("[data-dots] button")];
+    function paint(i) {
+      const set = quotes[i];
+      [...qRoot.children].forEach((card, idx) => {
+        const d = set[idx];
+        card.querySelector("p").textContent = d.t;
+        card.querySelector(".who img").src = d.img;
+        card.querySelector(".who img").alt = d.n;
+        card.querySelector(".who b").textContent = d.n;
+        card.querySelector(".who span").textContent = d.c;
+      });
+      dots.forEach((b, idx) => b.classList.toggle("active", idx === i));
+    }
+    dots.forEach((b, i) => b.addEventListener("click", () => paint(i)));
+
+    const SKILLS = {
+      "fashion designer": "Fashion Designer — tailors and custom outfits.",
+      fashion: "Fashion Designer — tailors and custom outfits.",
+      teaching: "Teaching — tutors, language and school help.",
+      tutor: "Teaching — tutors, language and school help.",
+      agriculture: "Agriculture Expert — farming, crops and livestock advice.",
+      farming: "Agriculture Expert — farming, crops and livestock advice.",
+      "web developer": "Web Developer — websites, apps and digital builds.",
+      web: "Web Developer — websites, apps and digital builds.",
+      developer: "Web Developer — websites, apps and digital builds.",
+      mechanics: "Mechanics — cars, bikes, engines and repairs.",
+      mechanic: "Mechanics — cars, bikes, engines and repairs.",
+      "hair braiding": "Hair Braiding — braids, twists and cornrows.",
+      braiding: "Hair Braiding — braids, twists and cornrows.",
+      pastries: "Pastries — custom cakes, bakers and more.",
+      cake: "Pastries — custom cakes, bakers and more.",
+      basketball: "Basketball — coaches, trainers and more.",
+      coaching: "Basketball — coaches, trainers and more."
+    };
+    const HUMAN = {
+      name: "AJAUH KELVIN",
+      phone: "+237678531597",
+      wa: "https://wa.me/237678531597"
+    };
+    const HUMAN_TEXT = `Here is our human personnel: ${HUMAN.name}\n${HUMAN.phone}\n\nPlease exchange with him through a normal call or through WhatsApp.`;
+    const SYSTEM = `You are WE-LINK Assist, a concise helpful AI on the WE-LINK landing page (Africa-focused local-talent marketplace). WE-LINK connects clients with trusted local professionals using AI matching, time prediction and reviews. Popular skills: Fashion Designer, Teaching, Agriculture Expert, Web Developer, Mechanics, Hair Braiding, Pastries, Basketball. How it works: 1) Tell us what you need 2) AI finds the best match 3) Book & confirm 4) Get it done. Clients tap Find a Service. Pros tap Join as a Professional. Do not invent prices. If the user wants a human, agent, staff, personnel, real person, or to call/WhatsApp someone, reply ONLY with: Here is our human personnel: AJAUH KELVIN. Number +237678531597. Please exchange through a normal call or through WhatsApp. Never give any other phone number. Keep other answers short (2-5 sentences), friendly, and in the user's language.`;
+
+    function wantsHuman(text) {
+      const q = text.toLowerCase();
+      return /human|personel|personnel|\bperson\b|staff|\bagent\b|real (person|human)|speak to (a |an )?(human|person|someone|agent|staff)|talk to (a |an )?(human|person|someone|agent|staff)|call (me|someone|kelvin)|whatsapp|live (chat|agent|support)|customer (service|care|support)|representative|kelvin|ajauh/.test(q);
+    }
+
+    function localReply(text) {
+      const q = text.toLowerCase();
+      if (wantsHuman(q)) return HUMAN_TEXT;
+      if (/hello|hi\b|hey|bonjour|salut/.test(q)) return "Hi — I’m WE-LINK Assist. Ask me how to book a pro, join as talent, find a skill, or speak to a human.";
+      if (/how (does|do).*(work)|how it works|process/.test(q)) return "Here’s how WE-LINK works:\n1. Tell us what you need\n2. AI finds the best local match\n3. Book & confirm\n4. Get it done and leave a review.";
+      if (/join|professional|earn|talent/.test(q) && /join|become|sign|register|pro/.test(q)) return "To join as a professional, tap Join as a Professional. Create your profile, add your skill, and WE-LINK’s AI can start matching you with nearby clients.";
+      if (/price|cost|xaf|how much/.test(q)) return "WE-LINK doesn’t list fixed prices on the site. After you describe the job, AI estimates a fair range so you and the pro can confirm before booking.";
+      if (/book|find a service|hire|need/.test(q)) return "Tap Find a Service, describe the job, and AI matches you with a trusted local pro. You then book, confirm time, and get it done.";
+      const hit = Object.keys(SKILLS).find((k) => q.includes(k));
+      if (hit) return `Yes — ${SKILLS[hit]} Browse Popular Categories and tap that card, or tell me your city and what you need so I can point you to Find a Service.`;
+      if (/ai|match|recommend/.test(q)) return "Our AI matches on skill, location and reviews, then suggests the best provider and a time estimate so you can book with confidence.";
+      return "I can help with booking, joining as a pro, or finding Fashion Designer, Teaching, Agriculture Expert, Web Developer, Mechanics, Hair Braiding, Pastries, or Basketball. What do you need?";
+    }
+
+    async function askAI(userText, history) {
+      const messages = [
+        { role: "system", content: SYSTEM },
+        ...history.slice(-6),
+        { role: "user", content: userText }
+      ];
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 12000);
+      try {
+        const res = await fetch("https://text.pollinations.ai/openai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: ctrl.signal,
+          body: JSON.stringify({ model: "openai", messages, temperature: 0.6 })
+        });
+        if (!res.ok) throw new Error("ai");
+        const data = await res.json();
+        const reply = data?.choices?.[0]?.message?.content?.trim();
+        if (!reply) throw new Error("empty");
+        return reply;
+      } catch {
+        return localReply(userText);
+      } finally {
+        clearTimeout(t);
+      }
+    }
+
+    const fab = document.querySelector("[data-chat-open]");
+    const chatPanel = document.querySelector("[data-chat-panel]");
+    const closer = document.querySelector("[data-chat-close]");
+    const log = document.querySelector("[data-chat-log]");
+    const form = document.querySelector("[data-chat-form]");
+    const unread = document.querySelector("[data-chat-unread]");
+    const input = form.querySelector("input");
+    const sendBtn = form.querySelector("button");
+    const history = [];
+    let greeted = false;
+
+    function addBubble(role, text, html) {
+      const el = document.createElement("div");
+      el.className = `bubble ${role}`;
+      if (html) el.innerHTML = html;
+      else el.textContent = text;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      return el;
+    }
+    function humanHtml() {
+      return `Here is our human personnel: <strong>AJAUH KELVIN</strong><br><a href="tel:+237678531597">+237678531597</a><br><br>Please exchange with him through a normal call or through WhatsApp.<div class="contact-actions"><a class="call" href="tel:+237678531597">Call</a><a class="wa" href="https://wa.me/237678531597" target="_blank" rel="noopener">WhatsApp</a></div>`;
+    }
+    function openChat() {
+      chatPanel.classList.remove("closing");
+      void chatPanel.offsetWidth;
+      chatPanel.classList.add("open");
+      fab.setAttribute("aria-expanded", "true");
+      fab.setAttribute("aria-label", "Close WE-LINK Assist");
+      unread.hidden = true;
+      if (!greeted) {
+        greeted = true;
+        addBubble("bot", "Hi, I’m WE-LINK Assist. I can help you find a local skill, explain booking, or show how to join as a professional.");
+      }
+      input.focus();
+    }
+    function closeChat() {
+      if (!chatPanel.classList.contains("open") || chatPanel.classList.contains("closing")) return;
+      chatPanel.classList.add("closing");
+      fab.setAttribute("aria-expanded", "false");
+      fab.setAttribute("aria-label", "Open WE-LINK Assist");
+      const finish = () => {
+        chatPanel.classList.remove("open", "closing");
+        chatPanel.removeEventListener("animationend", finish);
+      };
+      chatPanel.addEventListener("animationend", finish);
+      setTimeout(finish, 500);
+    }
+    fab.addEventListener("click", () => {
+      if (chatPanel.classList.contains("open") && !chatPanel.classList.contains("closing")) closeChat();
+      else openChat();
+    });
+    closer.addEventListener("click", closeChat);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && chatPanel.classList.contains("open")) closeChat(); });
+    document.querySelectorAll("[data-chips] .chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        input.value = chip.textContent;
+        form.requestSubmit();
+      });
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      addBubble("user", text);
+      history.push({ role: "user", content: text });
+      if (wantsHuman(text)) {
+        addBubble("bot", HUMAN_TEXT, humanHtml());
+        history.push({ role: "assistant", content: HUMAN_TEXT });
+        return;
+      }
+      sendBtn.disabled = true;
+      const wait = addBubble("bot typing", "Thinking…");
+      const reply = await askAI(text, history);
+      wait.remove();
+      addBubble("bot", reply);
+      history.push({ role: "assistant", content: reply });
+      sendBtn.disabled = false;
+      input.focus();
+    });
+    setTimeout(() => { if (!chatPanel.classList.contains("open")) unread.hidden = false; }, 1800);
+  </script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/discovery.js"></script>
+  <script>
+    (async () => {
+      await WeLink.ready;
+      const live = document.getElementById("live-pro-list");
+      if (live && window.WeLink) {
+        const H = WeLinkHelpers;
+        const list = (await WeLink.activeProfessionals()).slice(0, 6);
+        live.innerHTML = list.length
+          ? list.map((p) => `<article class="cat-card ix">
+              <img src="${H.avatarUrl(p)}" alt="" style="width:56px;height:56px;border-radius:12px;object-fit:cover;margin-bottom:12px" />
+              <h3>${H.esc(p.name)}</h3>
+              <p style="color:#ffffff;font-size:12px;font-weight:700;margin-bottom:6px">${H.esc(p.skill)} · ${H.esc(p.location)}</p>
+              <p style="color:var(--muted);font-size:14px">${H.esc((p.bio || "").slice(0,90))}${(p.bio || "").length > 90 ? "…" : ""}</p>
+              ${p.achievements ? `<p style="color:var(--muted);font-size:12px;margin-top:8px">${H.esc((p.achievements || "").slice(0,70))}${(p.achievements || "").length > 70 ? "…" : ""}</p>` : ""}
+            </article>`).join("")
+          : `<p style="grid-column:1/-1;text-align:center;color:var(--muted)">Approved professionals will appear here after admin review. <a href="register-pro.html" style="color:var(--brand)">Join as a professional</a></p>`;
+      }
+      const session = WeLink.session();
+      const loginLink = document.querySelector(".nav-cta .login");
+      const mobileLogin = document.querySelector(".mobile-panel .login-mobile");
+      if (session && loginLink) {
+        const dash = session.role === "admin" ? "admin.html" : "dashboard.html";
+        loginLink.textContent = session.name;
+        loginLink.href = dash;
+        if (mobileLogin) {
+          mobileLogin.textContent = session.name;
+          mobileLogin.href = dash;
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

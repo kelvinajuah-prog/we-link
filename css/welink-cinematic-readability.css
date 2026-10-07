@@ -1,0 +1,373 @@
+/**
+ * Cinematic theme — readable text on every surface (all pages + in-app views).
+ * Loaded via welink-cinematic-theme.css when body.welink-cinematic is present.
+ */
+
+/* —— Shared tokens (admin + app aliases) —— */
+body.welink-cinematic {
+  --muted: var(--cin-muted);
+  --ink: var(--cin-ink);
+  --color-success: #4ade80;
+  --color-warning: #fcd34d;
+  --color-error: #fca5a5;
+}
+
+body.admin-shell.welink-cinematic {
+  --color-canvas: transparent;
+  --color-canvas-soft: transparent;
+  --color-canvas-deep: var(--cin-bg-deep);
+  --color-surface-card: var(--cin-surface-card);
+  --color-surface-strong: var(--cin-surface-elevated);
+  --color-surface-dark: var(--cin-bg-deep);
+  --color-surface-dark-elevated: var(--cin-surface-elevated);
+  --color-hairline: var(--cin-border);
+  --color-hairline-soft: rgba(140, 160, 175, 0.14);
+  --color-hairline-strong: rgba(140, 160, 175, 0.32);
+  --color-ink: var(--cin-ink);
+  --color-body: var(--cin-ink-soft);
+  --color-body-strong: var(--cin-ink);
+  --color-muted: var(--cin-muted);
+  --color-muted-soft: #8fa3b0;
+  --color-on-primary: var(--cin-on-primary);
+  --color-on-dark: var(--cin-ink);
+  --color-on-dark-soft: var(--cin-ink-soft);
+  --color-primary: var(--cin-primary);
+  --color-primary-active: var(--cin-primary-hover);
+  --color-success: #4ade80;
+  --color-error: #fca5a5;
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.35);
+  color: var(--cin-ink);
+}
+
+body.admin-shell.welink-cinematic .admin-sidebar,
+body.admin-shell.welink-cinematic .nav-link,
+body.admin-shell.welink-cinematic .sidebar-brand,
+body.admin-shell.welink-cinematic .admin-topbar,
+body.admin-shell.welink-cinematic .admin-main,
+body.admin-shell.welink-cinematic .section-heading,
+body.admin-shell.welink-cinematic .kpi-label,
+body.admin-shell.welink-cinematic .data-table,
+body.admin-shell.welink-cinematic .data-table th,
+body.admin-shell.welink-cinematic .data-table td,
+body.admin-shell.welink-cinematic input,
+body.admin-shell.welink-cinematic select,
+body.admin-shell.welink-cinematic textarea,
+body.admin-shell.welink-cinematic .search-input,
+body.admin-shell.welink-cinematic .note-item,
+body.admin-shell.welink-cinematic .realtime-chat-room,
+body.admin-shell.welink-cinematic .placeholder-card {
+  color: inherit;
+}
+
+body.admin-shell.welink-cinematic input::placeholder,
+body.admin-shell.welink-cinematic textarea::placeholder,
+body.admin-shell.welink-cinematic .search-input::placeholder {
+  color: #7a8f9c;
+  opacity: 1;
+}
+
+body.admin-shell.welink-cinematic .button-secondary,
+body.admin-shell.welink-cinematic .button-ghost {
+  color: var(--cin-ink);
+  border-color: var(--cin-border);
+}
+
+body.admin-shell.welink-cinematic .kpi-trend.up {
+  color: #4ade80;
+}
+
+body.admin-shell.welink-cinematic .kpi-trend.down {
+  color: #fca5a5;
+}
+
+body.admin-shell.welink-cinematic .notes-dropdown,
+body.admin-shell.welink-cinematic .notes-dropdown .note-item {
+  color: var(--cin-ink);
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+}
+
+/* —— App shell (register, professionals, dashboard fallback) —— */
+body.welink-cinematic label,
+body.welink-cinematic .choice h2,
+body.welink-cinematic .choice p,
+body.welink-cinematic .pro-card,
+body.welink-cinematic .table th,
+body.welink-cinematic .table td,
+body.welink-cinematic .modal,
+body.welink-cinematic .modal h2,
+body.welink-cinematic .quote-row,
+body.welink-cinematic .comm-item,
+body.welink-cinematic .chat-room-head,
+body.welink-cinematic .note {
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .table th {
+  color: var(--cin-muted);
+}
+
+body.welink-cinematic .lede,
+body.welink-cinematic .muted,
+body.welink-cinematic .empty-chat,
+body.welink-cinematic .empty-state {
+  color: var(--cin-muted);
+}
+
+body.welink-cinematic .link-btn {
+  color: var(--cin-glow-gold);
+}
+
+body.welink-cinematic .link-btn:hover {
+  color: var(--cin-glow-orange);
+}
+
+body.welink-cinematic input::placeholder,
+body.welink-cinematic textarea::placeholder {
+  color: #7a8f9c;
+  opacity: 1;
+}
+
+body.welink-cinematic .err {
+  color: #fecaca;
+  background: rgba(185, 28, 28, 0.35);
+  border: 1px solid #f87171;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+body.welink-cinematic .ok {
+  color: #bbf7d0;
+  background: rgba(22, 101, 52, 0.35);
+  border: 1px solid #4ade80;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+body.welink-cinematic .status-pending {
+  color: #fcd34d;
+}
+
+body.welink-cinematic .status-accepted,
+body.welink-cinematic .status-approved {
+  color: #86efac;
+}
+
+body.welink-cinematic .status-rejected,
+body.welink-cinematic .status-cancelled {
+  color: #fca5a5;
+}
+
+body.welink-cinematic .chat-bubble.theirs {
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .chat-bubble .msg-time {
+  color: var(--cin-muted);
+}
+
+body.welink-cinematic .chat-bubble.mine .msg-time {
+  color: rgba(26, 18, 8, 0.65);
+}
+
+body.welink-cinematic .chat-attach {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-cinematic .notes {
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .note.unread {
+  background: rgba(232, 136, 58, 0.12);
+  color: var(--cin-ink);
+}
+
+/* —— Landing —— */
+body.welink-landing.welink-cinematic .hero-lead,
+body.welink-landing.welink-cinematic .trust p,
+body.welink-landing.welink-cinematic .copy,
+body.welink-landing.welink-cinematic .site-footer li a,
+body.welink-landing.welink-cinematic .foot-about p {
+  color: var(--cin-muted);
+}
+
+body.welink-landing.welink-cinematic .site-footer h4,
+body.welink-landing.welink-cinematic .nav-links a {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-landing.welink-cinematic .socials a {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-landing.welink-cinematic #live-pro-list p[style*="color:#888"],
+body.welink-landing.welink-cinematic #live-pro-list p[style*="color: #888"] {
+  color: var(--cin-muted) !important;
+}
+
+/* —— Login (override light-theme login.css on dark card) —— */
+body.login-page.welink-cinematic .login-nav-links a:hover {
+  color: var(--cin-glow-gold);
+}
+
+body.login-page.welink-cinematic .login-nav-links a span {
+  color: var(--cin-muted);
+}
+
+body.login-page.welink-cinematic .login-card-lede,
+body.login-page.welink-cinematic .login-tabs-label,
+body.login-page.welink-cinematic .login-credentials-label {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-tab:not(.active) {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-tab:not(.active):hover {
+  border-color: var(--cin-border-warm);
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-tab.active {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  border-color: transparent;
+  color: var(--cin-on-primary);
+}
+
+body.login-page.welink-cinematic .login-tab:focus-visible {
+  outline-color: var(--cin-glow-gold);
+}
+
+body.login-page.welink-cinematic .login-field input,
+body.login-page.welink-cinematic .login-complete-grid input,
+body.login-page.welink-cinematic .login-complete-grid select,
+body.login-page.welink-cinematic #complete-form label input,
+body.login-page.welink-cinematic #complete-form label select {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-field input::placeholder {
+  color: #7a8f9c;
+}
+
+body.login-page.welink-cinematic .login-field input:focus,
+body.login-page.welink-cinematic .login-complete-grid input:focus,
+body.login-page.welink-cinematic .login-complete-grid select:focus {
+  box-shadow: 0 0 0 2px rgba(232, 136, 58, 0.35);
+}
+
+body.login-page.welink-cinematic .login-toggle-password {
+  color: var(--cin-muted);
+}
+
+body.login-page.welink-cinematic .login-toggle-password:hover {
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-remember {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-remember input {
+  accent-color: var(--cin-glow-orange);
+}
+
+body.login-page.welink-cinematic .login-submit:not(.login-submit--ready):not(.login-submit--loading) {
+  background: rgba(140, 160, 175, 0.25);
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-promo,
+body.login-page.welink-cinematic .login-promo p {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-complete-intro,
+body.login-page.welink-cinematic .login-complete-grid label {
+  color: var(--cin-ink-soft);
+}
+
+/* —— Guest & Pro dashboards —— */
+body.guest-dashboard-page.welink-cinematic,
+body.pro-dashboard-page.welink-cinematic {
+  --gd-muted: var(--cin-muted);
+  --gd-text: var(--cin-ink);
+  --pd-muted: var(--cin-muted);
+  --pd-text: var(--cin-ink);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-impact-text {
+  background: linear-gradient(180deg, var(--cin-ink) 0%, var(--cin-muted) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+body.pro-dashboard-page.welink-cinematic .pd-impact-text {
+  background: linear-gradient(180deg, var(--cin-ink) 0%, var(--cin-muted) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-empty,
+body.pro-dashboard-page.welink-cinematic .gd-empty,
+body.guest-dashboard-page.welink-cinematic .gd-note,
+body.pro-dashboard-page.welink-cinematic .pd-empty {
+  color: var(--cin-ink-soft);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-nav-item.is-muted,
+body.pro-dashboard-page.welink-cinematic .pd-nav-item.is-muted {
+  color: var(--cin-muted);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-sidebar-promo,
+body.pro-dashboard-page.welink-cinematic .pd-sidebar-promo {
+  color: var(--cin-ink-soft);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-inner-page .chat-bubble.theirs,
+body.pro-dashboard-page.welink-cinematic .pd-inner .chat-bubble.theirs {
+  color: var(--cin-ink);
+}
+
+body.guest-dashboard-page.welink-cinematic .comm-ended-notice,
+body.pro-dashboard-page.welink-cinematic .comm-ended-notice {
+  color: #fcd34d;
+  background: rgba(180, 83, 9, 0.35);
+  border-color: #fbbf24;
+}
+
+/* —— Events & skills (in dashboard) —— */
+body.welink-cinematic .evt-card,
+body.welink-cinematic .evt-card p,
+body.welink-cinematic .evt-meta {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-cinematic .evt-card h3,
+body.welink-cinematic .evt-title {
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .skills-picker-hint,
+body.welink-cinematic .skills-picker-empty {
+  color: var(--cin-muted);
+}
+
+/* —— 404 —— */
+body.welink-cinematic .error-page,
+body.welink-cinematic .error-page p {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-cinematic .error-page h1 {
+  color: var(--cin-ink);
+}

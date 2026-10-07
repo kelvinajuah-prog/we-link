@@ -1,0 +1,11 @@
+# Keep deploy uploads small — site is static files at repo root
+.git
+.cursor
+openspec
+node_modules
+web/invite-guest/node_modules
+web/invite-guest/src
+**/.env
+**/.env.*
+*.log
+agent-transcripts

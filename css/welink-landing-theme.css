@@ -1,0 +1,277 @@
+/**
+ * Landing page — Admin Dashboard color language (layout unchanged).
+ */
+body.welink-landing {
+  background: var(--wl-canvas);
+  color: var(--wl-ink);
+}
+
+body.welink-landing .site-header {
+  background: rgba(245, 245, 245, 0.92);
+  border-bottom-color: var(--wl-hairline);
+}
+
+body.welink-landing .nav-links {
+  color: var(--wl-body);
+}
+
+body.welink-landing .nav-links a:hover,
+body.welink-landing .nav-links a.active {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .nav-links a.active::after {
+  background: var(--wl-primary);
+}
+
+body.welink-landing .gold {
+  color: var(--wl-primary);
+}
+
+body.welink-landing :focus-visible {
+  outline-color: var(--wl-primary);
+}
+
+body.welink-landing .btn-primary {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+body.welink-landing .btn-primary:hover {
+  background: var(--wl-primary-active);
+}
+
+body.welink-landing .btn-ghost {
+  color: var(--wl-ink);
+  border-color: var(--wl-hairline-strong);
+}
+
+body.welink-landing .btn-ghost:hover {
+  border-color: var(--wl-primary);
+  color: var(--wl-primary);
+}
+
+body.welink-landing .menu-toggle {
+  color: var(--wl-ink);
+}
+
+body.welink-landing .badge {
+  border-color: var(--wl-hairline-strong);
+  background: var(--wl-surface-strong);
+  color: var(--wl-body);
+}
+
+body.welink-landing .badge-dot {
+  background: var(--wl-success);
+}
+
+body.welink-landing .hero-lead {
+  color: var(--wl-body);
+}
+
+body.welink-landing .hero-stat svg {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .glow-ring {
+  border-color: rgba(168, 200, 232, 0.55);
+  box-shadow: 0 0 60px rgba(168, 200, 232, 0.25), inset 0 0 40px rgba(167, 229, 211, 0.12);
+}
+
+body.welink-landing .glow-ring::after {
+  border-color: rgba(200, 184, 224, 0.35);
+}
+
+body.welink-landing .float-card,
+body.welink-landing .ai-card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-card);
+  color: var(--wl-ink);
+}
+
+body.welink-landing .star,
+body.welink-landing .stars {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .cat-card {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+body.welink-landing .cat-card:hover {
+  border-color: var(--wl-hairline-strong);
+}
+
+body.welink-landing .icon-box,
+body.welink-landing .ai-feat svg,
+body.welink-landing .mid-stat svg {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .explore {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .steps::before {
+  border-top-color: var(--wl-hairline-strong);
+}
+
+body.welink-landing .step-num {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+body.welink-landing .step-icon {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  color: var(--wl-primary);
+}
+
+body.welink-landing .quote {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+body.welink-landing .quote p {
+  color: var(--wl-body);
+}
+
+body.welink-landing .quote-mark {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .dots button {
+  background: var(--wl-hairline-strong);
+}
+
+body.welink-landing .dots button.active {
+  background: var(--wl-primary);
+}
+
+body.welink-landing .trust p {
+  color: var(--wl-muted);
+}
+
+body.welink-landing .logos svg {
+  fill: var(--wl-muted-soft);
+}
+
+body.welink-landing .socials a {
+  color: var(--wl-body);
+  border-color: var(--wl-hairline-strong);
+}
+
+body.welink-landing .socials a:hover {
+  border-color: var(--wl-primary);
+  color: var(--wl-primary);
+}
+
+body.welink-landing .site-footer li a:hover {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .copy {
+  color: var(--wl-muted);
+  border-top-color: var(--wl-hairline);
+}
+
+body.welink-landing .chat-fab {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+  box-shadow: var(--wl-shadow-card);
+}
+
+body.welink-landing .chat-fab:hover {
+  background: var(--wl-primary-active);
+}
+
+body.welink-landing .chat-unread {
+  border-color: var(--wl-surface-card);
+}
+
+body.welink-landing .chat-panel {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-card);
+}
+
+body.welink-landing .chat-head {
+  background: var(--wl-canvas-soft);
+  border-bottom-color: var(--wl-hairline);
+}
+
+body.welink-landing .ai-pill {
+  color: var(--wl-primary);
+}
+
+body.welink-landing .chat-x {
+  color: var(--wl-muted);
+}
+
+body.welink-landing .chat-x:hover {
+  color: var(--wl-primary);
+  background: var(--wl-surface-strong);
+}
+
+body.welink-landing .bubble.bot {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+  border: 1px solid var(--wl-hairline);
+}
+
+body.welink-landing .bubble.user {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+body.welink-landing .chip {
+  border-color: var(--wl-hairline-strong);
+  background: var(--wl-surface-card);
+  color: var(--wl-body);
+}
+
+body.welink-landing .chip:hover {
+  border-color: var(--wl-primary);
+  color: var(--wl-primary);
+}
+
+body.welink-landing .chat-form {
+  border-top-color: var(--wl-hairline);
+}
+
+body.welink-landing .chat-form input {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+body.welink-landing .chat-form input:focus {
+  border-color: var(--wl-primary);
+}
+
+body.welink-landing .chat-send {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+body.welink-landing .chat-send:hover {
+  background: var(--wl-primary-active);
+}
+
+body.welink-landing .bubble.user {
+  color: var(--wl-on-primary);
+}
+
+body.welink-landing .contact-actions .call {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary) !important;
+}
+
+body.welink-landing .mobile-panel.open {
+  background: var(--wl-surface-card);
+  border-bottom-color: var(--wl-hairline);
+}

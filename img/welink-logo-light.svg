@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 76" fill="none" role="img" aria-label="WeLink  Connect · Collaborate · Grow">
+  <title>WeLink</title>
+  <g transform="translate(4, 14)">
+    <path fill="#3399FF" d="M14 4C7.4 4 2 9.4 2 16c0 10.2 8.8 18 24 30C41.2 34 50 26.2 50 16 50 9.4 44.6 4 38 4c-4.2 0-7.8 2.3-10.8 6.6C24.2 6.3 20.6 4 14 4z"/>
+    <path fill="#00E89A" d="M30 4C23.4 4 18 9.4 18 16c0 10.2 8.8 18 24 30C59.2 34 68 26.2 68 16 68 9.4 62.6 4 56 4c-4.2 0-7.8 2.3-10.8 6.6C40.2 6.3 36.6 4 30 4z"/>
+  </g>
+  <text x="88" y="36" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF" letter-spacing="-0.03em">We</text>
+  <text x="132" y="36" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif" font-size="28" font-weight="700" fill="#5EB3FF" letter-spacing="-0.03em">Link</text>
+  <text x="88" y="58" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif" font-size="12" font-weight="500" fill="#D4D4D4" letter-spacing="0.06em">Connect · Collaborate · Grow</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 64" fill="none" aria-hidden="true">
+  <g transform="translate(0,8)">
+    <path fill="#0066FF" d="M18 8c-6.6 0-12 5.4-12 12 0 9.5 8.2 16.8 22 28 13.8-11.2 22-18.5 22-28 0-6.6-5.4-12-12-12-3.6 0-6.8 2-9.5 5.6C25.8 10 22.6 8 18 8z"/>
+    <path fill="#00D78C" d="M34 8c-6.6 0-12 5.4-12 12 0 9.5 8.2 16.8 22 28 13.8-11.2 22-18.5 22-28 0-6.6-5.4-12-12-12-3.6 0-6.8 2-9.5 5.6C41.8 10 38.6 8 34 8z" opacity="0.95"/>
+  </g>
+  <text x="78" y="30" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#111111">We</text>
+  <text x="112" y="30" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#0066FF">Link</text>
+  <text x="78" y="48" font-family="Inter, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#9ca3af">Connect � Collaborate � Grow</text>
+</svg>

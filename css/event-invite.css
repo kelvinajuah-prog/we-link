@@ -1,0 +1,201 @@
+.evt-invite-panel { margin-top: 4px; }
+
+.evt-invite-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.evt-invite-title { margin: 0 0 8px; font-size: 1.25rem; }
+
+.evt-invite-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.evt-invite-select,
+.evt-invite-search-wrap input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+}
+
+.evt-invite-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.evt-invite-search-wrap svg {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.evt-invite-search-wrap input {
+  padding-left: 42px;
+  border-radius: 999px;
+}
+
+.evt-invite-toast {
+  margin: 0 0 12px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.evt-invite-results { display: flex; flex-direction: column; gap: 10px; }
+
+.evt-invite-hint,
+.evt-invite-empty {
+  margin: 0;
+  padding: 20px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.evt-inv-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.evt-inv-card:hover {
+  border-color: rgba(167, 139, 250, 0.45);
+  transform: translateY(-1px);
+}
+
+.evt-inv-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(167, 139, 250, 0.35);
+}
+
+.evt-inv-card-body { flex: 1; min-width: 160px; }
+
+.evt-inv-name { margin: 0; font-weight: 700; font-size: 15px; }
+.evt-inv-user { margin: 2px 0 0; font-size: 12px; opacity: 0.7; }
+.evt-inv-meta { margin: 6px 0 0; font-size: 13px; opacity: 0.88; }
+
+.evt-inv-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.evt-inv-btn {
+  padding: 9px 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.evt-inv-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.evt-inv-btn--primary {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1e1033;
+}
+
+.evt-inv-btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: inherit;
+}
+
+.evt-inv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.evt-inv-badge--invite { background: rgba(255, 255, 255, 0.08); }
+.evt-inv-badge--pending { background: rgba(251, 191, 36, 0.2); color: #fcd34d; }
+.evt-inv-badge--accepted { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+.evt-inv-badge--declined { background: rgba(248, 113, 113, 0.15); color: #fca5a5; }
+
+.evt-guest-invites-block { margin-bottom: 24px; }
+
+.evt-guest-invites-title {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+
+.evt-guest-invites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.evt-guest-invite-card {
+  padding: 20px 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.08));
+}
+
+.evt-guest-invite-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+
+.evt-guest-invite-head h4 { margin: 0 0 6px; font-size: 1.15rem; }
+.evt-guest-invite-from { margin: 0; font-size: 14px; opacity: 0.9; }
+.evt-guest-invite-desc { margin: 12px 0 8px; font-size: 14px; line-height: 1.5; }
+.evt-guest-invite-when { margin: 0 0 16px; font-size: 12px; opacity: 0.7; }
+
+.evt-guest-invite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .evt-inv-card-actions { width: 100%; margin-left: 0; justify-content: flex-start; }
+  .evt-guest-invite-actions { flex-direction: column; }
+  .evt-guest-invite-actions button { width: 100%; }
+}

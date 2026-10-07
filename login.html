@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Log in — WeLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@300;400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/brand-logo.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+  <link rel="stylesheet" href="css/welink-skill-labels.css" />
+</head>
+<body class="login-page welink-cinematic">
+  <div class="login-promo">
+    Join thousands of professionals already on WeLink. <a href="register.html">Here.</a>
+  </div>
+
+  <header class="login-nav">
+    <a class="login-nav-brand welink-brand-block" href="index.html">
+      <img class="welink-logo welink-logo-nav" src="img/welink-logo.png" alt="WeLink — Connect · Collaborate · Grow" />
+      <span class="welink-profession-line">Fashion Designer · Dancer · Chef · Cook</span>
+    </a>
+    <nav class="login-nav-links" aria-label="Site">
+      <a href="index.html#features">Features <span aria-hidden="true">▾</span></a>
+      <a href="index.html">About <span aria-hidden="true">▾</span></a>
+      <a href="professionals.html">Navigation <span aria-hidden="true">▾</span></a>
+      <a href="index.html">Captions <span aria-hidden="true">▾</span></a>
+    </nav>
+    <div class="login-nav-actions">
+      <a class="login-nav-home" href="/">Home</a>
+    </div>
+  </header>
+
+  <div class="login-atmosphere" aria-hidden="true"></div>
+
+  <main class="login-main">
+    <article class="login-card">
+      <div class="login-card-head">
+        <img class="login-card-brand" src="img/welink-logo.png" alt="WeLink — Connect · Collaborate · Grow" />
+        <h2 id="login-card-title">Log in to WeLink</h2>
+        <p class="login-card-lede" id="login-card-lede">Choose an account type, then sign in with your email and password.</p>
+      </div>
+
+      <div class="login-signin-panel" id="login-signin-panel" role="tabpanel" aria-label="Sign-in credentials">
+        <p class="login-tabs-label" id="login-tabs-label">Choose account type</p>
+        <div class="login-tabs" role="tablist" aria-labelledby="login-tabs-label">
+          <button type="button" class="login-tab active" role="tab" id="login-tab-guest" data-role="guest" aria-selected="true" aria-controls="login-signin-panel" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Guest
+          </button>
+          <button type="button" class="login-tab" role="tab" id="login-tab-professional" data-role="professional" aria-selected="false" aria-controls="login-signin-panel" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            Professional
+          </button>
+          <button type="button" class="login-tab" role="tab" id="login-tab-admin" data-role="admin" aria-selected="false" aria-controls="login-signin-panel" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Admin
+          </button>
+        </div>
+
+        <p class="login-credentials-label" id="login-credentials-label">Guest login credentials</p>
+
+        <form id="login-form" novalidate aria-label="Guest login credentials">
+          <input type="hidden" name="role" id="login-role-field" value="guest" />
+          <label class="login-field">
+            <span class="sr-only" id="login-email-label">Guest email address</span>
+            <input type="email" id="login-email" name="email" required autocomplete="username" placeholder="Guest email address" aria-labelledby="login-email-label" />
+          </label>
+          <label class="login-field">
+            <span class="sr-only" id="login-password-label">Guest password</span>
+            <span class="login-password-wrap">
+              <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Guest password" aria-labelledby="login-password-label" />
+              <button type="button" class="login-toggle-password" id="toggle-password" aria-label="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </span>
+          </label>
+          <p class="login-err" id="login-err" hidden></p>
+          <div class="login-row">
+            <label class="login-remember">
+              <input type="checkbox" id="remember-me" />
+              Remember me
+            </label>
+            <button type="button" class="login-forgot" id="forgot-password">Forgot?</button>
+          </div>
+          <p class="login-submit-status" id="login-submit-status" hidden aria-live="polite">Sign in ready — credentials valid.</p>
+          <button class="login-submit" type="submit" id="login-submit-btn" disabled aria-disabled="true">Sign in as Guest</button>
+        </form>
+
+        <p class="login-footer" id="login-footer" aria-live="polite">New here? <a id="signup-link" href="register-seeker.html">Create a guest account</a></p>
+      </div>
+
+      <div id="complete-panel" hidden>
+        <p class="login-complete-intro">You're signed in. Complete your guest profile to access the dashboard.</p>
+        <form id="complete-form">
+          <div class="login-complete-grid two">
+            <label><span>Full name</span><input name="name" required /></label>
+            <label><span>Age</span><input type="number" name="age" min="16" max="99" required /></label>
+          </div>
+          <label><span>Email</span><input type="email" name="email" required readonly /></label>
+          <div class="login-complete-grid two">
+            <label><span>Town / city</span><input name="town" required placeholder="e.g. Yaoundé" /></label>
+            <label><span>Area / neighbourhood</span><input name="area" required placeholder="e.g. Bastos" /></label>
+          </div>
+          <label><span>Area of specialisation</span><select name="specialization" required></select></label>
+          <label><span>Skills</span><input name="skills" required placeholder="e.g. sewing, styling, fitting" /></label>
+          <p class="login-err" id="complete-err" hidden></p>
+          <button class="login-submit" type="submit">Complete profile &amp; continue</button>
+        </form>
+      </div>
+    </article>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/login.js"></script>
+  <script>WeLinkLogin.init();</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+/* WeLink brand logo — official lockup (icon + wordmark + tagline) */
+.welink-logo {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.welink-logo-nav {
+  width: auto;
+  max-width: min(240px, 52vw);
+  max-height: 52px;
+}
+
+.welink-logo-full {
+  max-width: min(100%, 360px);
+  width: auto;
+  height: auto;
+  margin-inline: auto;
+}
+
+.welink-logo-sidebar {
+  max-width: 100%;
+  width: auto;
+  max-height: 72px;
+}
+
+.welink-logo-chat {
+  max-width: 180px;
+  width: auto;
+  max-height: 48px;
+}
+
+.login-card-brand {
+  display: block;
+  margin: 0 auto 24px;
+  width: auto;
+  max-width: min(100%, 340px);
+  max-height: none;
+  height: auto;
+  object-fit: contain;
+}
+
+.welink-brand-block {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+}

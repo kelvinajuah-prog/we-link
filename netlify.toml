@@ -1,0 +1,47 @@
+# WeLink — static multi-page app (HTML/CSS/JS at repo root)
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "npm run build:netlify"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Friendly paths (optional); core links use *.html
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 302
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 302
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 302
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"

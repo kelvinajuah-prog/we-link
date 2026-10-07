@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Professionals — WE-LINK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+</head>
+<body class="welink-cinematic">
+  <header data-header></header>
+  <main class="page wrap">
+    <h1>Registered <span class="gold">professionals</span></h1>
+    <p class="lede">Approved professionals on WE-LINK. Only admin-verified profiles are listed.</p>
+    <div id="toolbar"></div>
+    <div class="pro-grid" id="list"><p class="muted">Loading…</p></div>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/discovery.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    (async () => {
+      await WeLink.ready;
+      await WeLinkUI.renderHeader(document.querySelector("[data-header]"));
+      const D = WeLinkDiscovery;
+      let allPros = await WeLink.activeProfessionals();
+      let search = "";
+      let skill = "";
+
+      function render() {
+        const filtered = D.filterPros(allPros, { search, skill });
+        document.getElementById("toolbar").innerHTML = D.renderBrowseToolbar({
+          search,
+          skill,
+          skills: WeLink.SKILLS
+        });
+        document.getElementById("list").innerHTML = D.renderPublicGrid(
+          filtered,
+          "No approved professionals match your filters yet."
+        );
+        document.getElementById("browse-search")?.addEventListener("input", (e) => {
+          search = e.target.value;
+          render();
+        });
+        document.getElementById("browse-skill")?.addEventListener("change", (e) => {
+          skill = e.target.value;
+          render();
+        });
+      }
+
+      render();
+    })();
+  </script>
+</body>
+</html>

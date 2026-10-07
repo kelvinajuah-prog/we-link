@@ -1,0 +1,41 @@
+/**
+ * WeLink design tokens — sourced from Admin Dashboard (master reference).
+ * Use var(--wl-*) across Guest, Pro, and Landing for color harmony only.
+ */
+:root {
+  --wl-primary: #292524;
+  --wl-primary-active: #0c0a09;
+  --wl-canvas: #f5f5f5;
+  --wl-canvas-soft: #fafafa;
+  --wl-canvas-deep: #0c0a09;
+  --wl-surface-card: #ffffff;
+  --wl-surface-strong: #f0efed;
+  --wl-surface-dark: #0c0a09;
+  --wl-surface-dark-elevated: #1c1917;
+  --wl-hairline: #e7e5e4;
+  --wl-hairline-soft: #f0efed;
+  --wl-hairline-strong: #d6d3d1;
+  --wl-ink: #0c0a09;
+  --wl-body: #4e4e4e;
+  --wl-body-strong: #292524;
+  --wl-muted: #777169;
+  --wl-muted-soft: #a8a29e;
+  --wl-on-primary: #ffffff;
+  --wl-on-dark: #ffffff;
+  --wl-on-dark-soft: #a8a29e;
+  --wl-gradient-mint: #a7e5d3;
+  --wl-gradient-peach: #f4c5a8;
+  --wl-gradient-lavender: #c8b8e0;
+  --wl-gradient-sky: #a8c8e8;
+  --wl-gradient-rose: #e8b8c4;
+  --wl-success: #16a34a;
+  --wl-warning: #ca8a04;
+  --wl-error: #dc2626;
+  --wl-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --wl-shadow-card: 0 8px 24px rgba(12, 10, 9, 0.06);
+  --wl-radius-md: 8px;
+  --wl-radius-lg: 12px;
+  --wl-radius-xl: 16px;
+  --wl-font-display: "EB Garamond", "Times New Roman", serif;
+  --wl-font-body: Inter, system-ui, sans-serif;
+}

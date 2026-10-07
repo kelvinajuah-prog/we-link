@@ -1,0 +1,21 @@
+{
+  "name": "kelvin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:config": "node scripts/generate-config.js",
+    "build:invite-ui": "npm ci --prefix web/invite-guest && npm run build --prefix web/invite-guest",
+    "build:netlify": "npm run build:config",
+    "build:netlify:full": "npm run build:config && npm run build:invite-ui",
+    "dev": "npx serve . -l 5173"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/ssr": "^0.12.6",
+    "@supabase/supabase-js": "^2.115.0"
+  }
+}

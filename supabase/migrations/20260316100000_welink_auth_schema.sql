@@ -1,0 +1,2 @@
+-- WE-LINK Supabase schema (applied via Supabase MCP)
+-- Tables: profiles, guest_profiles, professional_profiles, connections, messages, notifications, whatsapp_requests

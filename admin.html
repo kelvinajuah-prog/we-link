@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — WE-LINK</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/brand-logo.css" />
+  <link rel="stylesheet" href="css/admin-dashboard.css" />
+  <link rel="stylesheet" href="css/admin-communication-hub.css" />
+  <link rel="stylesheet" href="css/events.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+  <link rel="stylesheet" href="css/welink-skill-labels.css" />
+</head>
+<body class="admin-shell welink-cinematic">
+  <header data-header></header>
+
+  <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" aria-label="Admin navigation">
+      <div class="sidebar-brand">
+        <a class="sidebar-logo welink-brand-block" href="admin.html">
+          <img class="welink-logo welink-logo-sidebar" src="img/welink-logo.png" alt="WeLink — Connect · Collaborate · Grow" />
+          <span class="welink-profession-line">Fashion Designer · Dancer · Chef · Cook</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul id="sidebar-nav"></ul>
+      </nav>
+      <div class="sidebar-footer-card">
+        <div class="icon-3d" aria-hidden="true">🔗</div>
+        <p>Building meaningful connections across Cameroon and beyond.</p>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
+
+        <div class="admin-search-wrap">
+          <span class="admin-search-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <input type="search" class="admin-search" id="admin-search" placeholder="Search members, professionals, or conversations…" autocomplete="off" />
+          <kbd class="search-kbd">Ctrl K</kbd>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="bell-wrap">
+            <button type="button" class="topbar-bell" id="topbar-bell" aria-label="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="bell-count-badge" id="bell-count" style="display:none"></span>
+            </button>
+            <div class="notes-dropdown" id="notes-dropdown"></div>
+          </div>
+
+          <div class="topbar-profile" id="topbar-profile"></div>
+
+          <div class="topbar-clock" id="admin-clock" aria-live="polite"></div>
+
+          <button type="button" class="button-outline topbar-logout" id="topbar-logout"><span>Log out</span></button>
+        </div>
+      </header>
+
+      <main class="admin-canvas">
+        <!-- Dashboard home -->
+        <section class="section-panel active" data-section-panel="dashboard">
+          <div class="welcome-block">
+            <h1>Welcome back, Admin 👋</h1>
+            <p>Platform statistics update live as members register, apply, and connect.</p>
+          </div>
+
+          <div class="kpi-row" id="kpi-row" aria-label="Dashboard statistics"></div>
+
+          <div class="dashboard-grid">
+            <div class="dashboard-row-2">
+              <div class="glass-card">
+                <div class="glass-card-header">
+                  <h3>Platform Overview</h3>
+                  <span class="card-subtitle">Member growth and activity over the last 7 days</span>
+                </div>
+                <div class="glass-card-body">
+                  <div class="charts-wrap">
+                    <div class="chart-box"><canvas id="line-chart"></canvas></div>
+                    <div class="chart-box" style="position:relative">
+                      <canvas id="donut-chart"></canvas>
+                      <div class="donut-center" id="donut-center"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>Recent Activities</h3></div>
+                <div class="glass-card-body">
+                  <div class="activity-list" id="activity-feed"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-row-3">
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>Professional Applications</h3></div>
+                <div class="glass-card-body" id="applications-table"></div>
+              </div>
+
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>Quick Actions</h3></div>
+                <div class="glass-card-body">
+                  <div class="quick-actions">
+                    <button type="button" class="button-primary" data-quick="approve-pro">+ Approve Professional</button>
+                    <button type="button" class="button-outline" data-quick="pending">View Pending Applications</button>
+                    <button type="button" class="button-outline" data-quick="members">Manage Members</button>
+                    <button type="button" class="button-outline" data-quick="realtime">Real-Time Conversations <span class="live-tag">Live</span></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>Live Conversations</h3></div>
+                <div class="glass-card-body">
+                  <div class="live-conv-list" id="live-conversations"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-row-4">
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>Communication Requests</h3></div>
+                <div class="glass-card-body" id="comm-requests-table"></div>
+              </div>
+              <div class="glass-card">
+                <div class="glass-card-header"><h3>WhatsApp Exchange Requests</h3></div>
+                <div class="glass-card-body" id="wa-requests-table"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-panel" data-section-panel="professionals" id="section-professionals"></section>
+        <section class="section-panel" data-section-panel="guests" id="section-guests"></section>
+        <section class="section-panel" data-section-panel="events" id="section-events"></section>
+        <section class="section-panel" data-section-panel="communication" id="section-communication"></section>
+        <section class="section-panel" data-section-panel="realtime" id="section-realtime"></section>
+        <section class="section-panel" data-section-panel="whatsapp" id="section-whatsapp"></section>
+        <section class="section-panel" data-section-panel="notifications" id="section-notifications"></section>
+        <section class="section-panel" data-section-panel="members" id="section-members"></section>
+        <section class="section-panel" data-section-panel="settings" id="section-settings"></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="member-modal-backdrop" id="member-modal" hidden aria-hidden="true">
+    <div class="member-modal" role="dialog" aria-labelledby="member-modal-title">
+      <div class="member-modal-top">
+        <h3 id="member-modal-title">Member profile</h3>
+        <button type="button" class="button-outline" id="member-modal-cancel" aria-label="Close">Close</button>
+      </div>
+      <div id="member-modal-body"></div>
+    </div>
+  </div>
+
+  <div class="reject-modal-backdrop" id="reject-modal" hidden aria-hidden="true">
+    <div class="reject-modal" role="dialog" aria-labelledby="reject-modal-title">
+      <h3 id="reject-modal-title">Reject application</h3>
+      <p class="muted">Optionally tell the professional why their request was declined.</p>
+      <label>Rejection reason
+        <textarea id="reject-reason-input" rows="3" placeholder="e.g. Incomplete achievements or unclear bio"></textarea>
+      </label>
+      <div class="reject-modal-actions">
+        <button type="button" class="button-outline" id="reject-modal-cancel">Cancel</button>
+        <button type="button" class="button-destructive" id="reject-modal-confirm">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/store.js?v=silent-admin-monitoring"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/events-ui.js"></script>
+  <script src="js/admin-dashboard.js"></script>
+  <script>
+    WeLinkAdminDashboard.init();
+  </script>
+</body>
+</html>

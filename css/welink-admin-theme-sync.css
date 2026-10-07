@@ -1,0 +1,715 @@
+/**
+ * Color harmonization: Guest + Pro dashboards → Admin design language.
+ * Layout/structure unchanged — tokens and surfaces only.
+ */
+
+body.guest-dashboard-page,
+body.pro-dashboard-page {
+  background: var(--wl-canvas);
+  color: var(--wl-ink);
+  --bg: var(--wl-canvas);
+  --card: var(--wl-surface-card);
+  --ink: var(--wl-ink);
+  --muted: var(--wl-muted);
+  --line: var(--wl-hairline);
+  --line-strong: var(--wl-hairline-strong);
+  --brand: var(--wl-primary);
+  --brand-ink: var(--wl-on-primary);
+}
+
+body.guest-dashboard-page .btn-primary,
+body.pro-dashboard-page .btn-primary {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+body.guest-dashboard-page .btn-primary:hover,
+body.pro-dashboard-page .btn-primary:hover {
+  background: var(--wl-primary-active);
+}
+
+body.guest-dashboard-page .btn-ghost,
+body.pro-dashboard-page .btn-ghost {
+  color: var(--wl-ink);
+  border-color: var(--wl-hairline-strong);
+}
+
+body.guest-dashboard-page .btn-ghost:hover,
+body.pro-dashboard-page .btn-ghost:hover {
+  border-color: var(--wl-primary);
+  color: var(--wl-primary);
+}
+
+body.guest-dashboard-page .gold,
+body.pro-dashboard-page .gold {
+  color: var(--wl-primary);
+}
+
+/* —— Guest dashboard —— */
+.guest-dashboard-page {
+  --gd-bg: var(--wl-canvas);
+  --gd-surface: var(--wl-canvas-soft);
+  --gd-card: var(--wl-surface-card);
+  --gd-card-2: var(--wl-surface-strong);
+  --gd-line: var(--wl-hairline);
+  --gd-text: var(--wl-ink);
+  --gd-muted: var(--wl-muted);
+  --gd-purple: var(--wl-primary);
+  --gd-teal: var(--wl-success);
+  --gd-pink: var(--wl-error);
+  --gd-blue: var(--wl-gradient-sky);
+  --gd-gradient: linear-gradient(135deg, var(--wl-primary) 0%, var(--wl-primary-active) 100%);
+  background: var(--gd-bg);
+  color: var(--gd-text);
+  font-family: var(--wl-font-body);
+}
+
+.guest-dashboard-page::before {
+  background:
+    radial-gradient(ellipse 85% 55% at 12% -5%, rgba(168, 200, 232, 0.45), transparent 58%),
+    radial-gradient(ellipse 65% 45% at 92% 8%, rgba(167, 229, 211, 0.35), transparent 52%),
+    radial-gradient(ellipse 55% 35% at 72% 95%, rgba(200, 184, 224, 0.28), transparent 48%);
+}
+
+.guest-dashboard-page .gd-sidebar {
+  background: var(--wl-surface-card);
+  border-right-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-brand-tag {
+  color: var(--wl-muted);
+}
+
+.guest-dashboard-page .gd-nav-item:hover {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-nav-item.is-active {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+  box-shadow: inset 3px 0 0 var(--wl-primary);
+}
+
+.guest-dashboard-page .gd-nav-badge {
+  background: var(--wl-error);
+  color: var(--wl-on-primary);
+}
+
+.guest-dashboard-page .gd-sidebar-promo {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-sidebar-promo-btn {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+.guest-dashboard-page .gd-sidebar-promo-btn:hover {
+  background: var(--wl-primary-active);
+}
+
+.guest-dashboard-page .gd-topbar {
+  background: var(--wl-canvas);
+  border-bottom-color: var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-search {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  border-radius: var(--wl-radius-md);
+}
+
+.guest-dashboard-page .gd-search:focus-within {
+  border-color: var(--wl-ink);
+  box-shadow: 0 0 0 1px var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-icon-btn,
+.guest-dashboard-page .gd-user-chip {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-notif-dot {
+  background: var(--wl-error);
+  color: var(--wl-on-primary);
+}
+
+.guest-dashboard-page .gd-btn-gradient {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-btn-gradient:hover {
+  background: var(--wl-primary-active);
+  filter: none;
+}
+
+.guest-dashboard-page .gd-btn-outline {
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+  background: var(--wl-surface-card);
+}
+
+.guest-dashboard-page .gd-btn-outline:hover {
+  border-color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-btn-dark {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+  border: 1px solid var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-btn-logout {
+  background: var(--wl-surface-card);
+  border: 1px solid var(--wl-hairline-strong);
+  color: var(--wl-body);
+}
+
+.guest-dashboard-page .gd-hero {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-hero-title,
+.guest-dashboard-page .gd-hero-kicker {
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-hero-sub {
+  color: var(--wl-body);
+}
+
+.guest-dashboard-page .gd-hero-pills span {
+  background: var(--wl-surface-strong);
+  border: 1px solid var(--wl-hairline);
+  color: var(--wl-body-strong);
+}
+
+.guest-dashboard-page .gd-hero-visual {
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-hero-swirl-a {
+  background: radial-gradient(circle, var(--wl-gradient-sky), transparent 70%);
+}
+
+.guest-dashboard-page .gd-hero-swirl-b {
+  background: radial-gradient(circle, var(--wl-gradient-lavender), transparent 70%);
+}
+
+.guest-dashboard-page .gd-hero-swirl-c {
+  background: radial-gradient(circle, var(--wl-gradient-mint), transparent 70%);
+}
+
+.guest-dashboard-page .gd-impact-text {
+  background: linear-gradient(180deg, var(--wl-body-strong), var(--wl-muted));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: none;
+}
+
+.guest-dashboard-page .gd-journey-text {
+  color: var(--wl-body-strong);
+  text-shadow: none;
+}
+
+.guest-dashboard-page .gd-hero-portrait {
+  border-color: var(--wl-hairline-strong);
+  box-shadow: var(--wl-shadow-card);
+}
+
+.guest-dashboard-page .gd-profile-card,
+.guest-dashboard-page .gd-panel,
+.guest-dashboard-page .gd-rec-card,
+.guest-dashboard-page .gd-inner-page .chat-room {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-tab {
+  color: var(--wl-muted);
+}
+
+.guest-dashboard-page .gd-tab.is-active {
+  color: var(--wl-ink);
+  border-bottom-color: var(--wl-primary);
+}
+
+.guest-dashboard-page .gd-tab:hover {
+  color: var(--wl-body-strong);
+}
+
+.guest-dashboard-page .gd-rec-card {
+  background: var(--wl-surface-card);
+}
+
+.guest-dashboard-page .gd-tag,
+.guest-dashboard-page .gd-tag-skill {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+  color: var(--wl-body-strong);
+}
+
+.guest-dashboard-page .gd-inner-page .chat-bubble.mine {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+.guest-dashboard-page .gd-inner-page .chat-bubble.theirs {
+  background: var(--wl-surface-strong);
+  border: 1px solid var(--wl-hairline);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .comm-ended-notice {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline-strong);
+}
+
+.guest-dashboard-page .app-logo-bar {
+  background: var(--wl-canvas);
+  border-bottom-color: var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-hero {
+  background: var(--wl-surface-card);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-hero-kicker {
+  color: var(--wl-muted);
+}
+
+.guest-dashboard-page .gd-hero-art {
+  background: linear-gradient(135deg, var(--wl-surface-strong), var(--wl-surface-card));
+}
+
+.guest-dashboard-page .gd-dot-teal { background: var(--wl-success); box-shadow: none; }
+.guest-dashboard-page .gd-dot-purple { background: var(--wl-primary); box-shadow: none; }
+.guest-dashboard-page .gd-dot-pink { background: var(--wl-gradient-rose); box-shadow: none; }
+
+.guest-dashboard-page .gd-journey-text {
+  color: var(--wl-body-strong);
+  text-shadow: none;
+}
+
+.guest-dashboard-page .gd-journey-text::after {
+  background: linear-gradient(90deg, transparent, var(--wl-hairline-strong), transparent);
+}
+
+.guest-dashboard-page .gd-hero-portrait {
+  border-color: var(--wl-hairline-strong);
+  box-shadow: var(--wl-shadow-card);
+}
+
+.guest-dashboard-page .gd-profile-card,
+.guest-dashboard-page .gd-stat-tile,
+.guest-dashboard-page .gd-rail-card {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-edit-profile-btn,
+.guest-dashboard-page .gd-profile-edit {
+  border-color: var(--wl-hairline-strong);
+  background: var(--wl-surface-card);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-edit-profile-btn:hover,
+.guest-dashboard-page .gd-profile-edit:hover {
+  border-color: var(--wl-ink);
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-stat-tile strong,
+.guest-dashboard-page .gd-rail-card h4 {
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-rec-card:hover {
+  border-color: var(--wl-hairline-strong);
+}
+
+.guest-dashboard-page .gd-inner-page input,
+.guest-dashboard-page .gd-inner-page select,
+.guest-dashboard-page .gd-inner-page textarea,
+.guest-dashboard-page .gd-edit-form input,
+.guest-dashboard-page .gd-edit-form select,
+.guest-dashboard-page .gd-edit-form textarea {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-inner-page input:focus,
+.guest-dashboard-page .gd-edit-form input:focus {
+  border-color: var(--wl-ink);
+}
+
+.guest-dashboard-page .gd-comm-banner {
+  border-color: var(--wl-hairline);
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-comm-banner.is-gold {
+  border-color: var(--wl-hairline-strong);
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-tag-skill {
+  background: var(--wl-surface-strong);
+  color: var(--wl-body-strong);
+  border-color: var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-rec-actions .status-pill {
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-body-strong);
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-btn-dark {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+  border-color: transparent;
+}
+
+.guest-dashboard-page .gd-btn-dark:hover {
+  background: var(--wl-primary-active);
+}
+
+.guest-dashboard-page .gd-quick-list button {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+}
+
+.guest-dashboard-page .gd-quick-list button:hover {
+  background: var(--wl-surface-strong);
+}
+
+.guest-dashboard-page .gd-quick-list button.gd-quick-featured {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline-strong);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page .gd-quick-featured .gd-quick-copy small {
+  color: var(--wl-muted);
+}
+
+.guest-dashboard-page #app .card,
+.guest-dashboard-page .gd-inner .card,
+.pro-dashboard-page #app .card,
+.pro-dashboard-page .pd-inner .card {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  color: var(--wl-ink);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.guest-dashboard-page #app,
+.pro-dashboard-page #app {
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page #app input,
+.guest-dashboard-page #app select,
+.guest-dashboard-page #app textarea,
+.pro-dashboard-page #app input,
+.pro-dashboard-page #app select,
+.pro-dashboard-page #app textarea {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.guest-dashboard-page #app .button-primary,
+.pro-dashboard-page #app .button-primary {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+.guest-dashboard-page #app .button-primary:hover,
+.pro-dashboard-page #app .button-primary:hover {
+  background: var(--wl-primary-active);
+}
+
+body.guest-dashboard-page .evt-card,
+body.pro-dashboard-page .evt-card {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+body.guest-dashboard-page .evt-schedule input,
+body.guest-dashboard-page .evt-schedule textarea,
+body.guest-dashboard-page .evt-edit-form input,
+body.guest-dashboard-page .evt-edit-form textarea,
+body.pro-dashboard-page .evt-schedule input,
+body.pro-dashboard-page .evt-schedule textarea,
+body.pro-dashboard-page .evt-edit-form input,
+body.pro-dashboard-page .evt-edit-form textarea {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+body.guest-dashboard-page .evt-countdown span,
+body.pro-dashboard-page .evt-countdown span {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+}
+
+body.guest-dashboard-page .evt-badge,
+body.pro-dashboard-page .evt-badge {
+  background: var(--wl-surface-strong);
+}
+
+body.guest-dashboard-page .evt-badge-scheduled,
+body.pro-dashboard-page .evt-badge-scheduled {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--wl-success);
+}
+
+body.guest-dashboard-page .evt-paused,
+body.pro-dashboard-page .evt-paused {
+  color: var(--wl-warning);
+}
+
+/* —— Professional dashboard —— */
+.pro-dashboard-page {
+  --pd-bg: var(--wl-canvas);
+  --pd-surface: var(--wl-canvas-soft);
+  --pd-card: var(--wl-surface-card);
+  --pd-line: var(--wl-hairline);
+  --pd-text: var(--wl-ink);
+  --pd-muted: var(--wl-muted);
+  --pd-gold: var(--wl-primary);
+  --pd-gold-dark: var(--wl-primary-active);
+  --pd-purple: var(--wl-primary);
+  --pd-teal: var(--wl-success);
+  --pd-gradient: linear-gradient(135deg, var(--wl-primary), var(--wl-primary-active));
+  background: var(--pd-bg);
+  color: var(--pd-text);
+  font-family: var(--wl-font-body);
+}
+
+.pro-dashboard-page::before {
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 0%, rgba(168, 200, 232, 0.4), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 88% 12%, rgba(244, 197, 168, 0.3), transparent 50%);
+}
+
+.pro-dashboard-page .pd-sidebar {
+  background: var(--wl-surface-card);
+  border-right-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.pro-dashboard-page .pd-nav-item:hover {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-nav-item.is-active {
+  background: var(--wl-surface-strong);
+  color: var(--wl-ink);
+  border-left-color: var(--wl-primary);
+  box-shadow: none;
+}
+
+.pro-dashboard-page .pd-sidebar-promo {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+  color: var(--wl-body);
+}
+
+.pro-dashboard-page .pd-topbar {
+  background: var(--wl-canvas);
+  border-bottom-color: var(--wl-hairline);
+}
+
+.pro-dashboard-page .pd-search {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  border-radius: var(--wl-radius-md);
+}
+
+.pro-dashboard-page .pd-search input {
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-icon-btn,
+.pro-dashboard-page .pd-user-chip {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-btn-gold {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.pro-dashboard-page .pd-btn-gold:hover {
+  background: var(--wl-primary-active);
+  filter: none;
+}
+
+.pro-dashboard-page .pd-btn-logout {
+  background: var(--wl-surface-card);
+  border: 1px solid var(--wl-hairline-strong);
+  color: var(--wl-body);
+}
+
+.pro-dashboard-page .pd-hero {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.pro-dashboard-page .pd-hero-bg {
+  background:
+    radial-gradient(circle at 85% 25%, rgba(168, 200, 232, 0.55), transparent 50%),
+    radial-gradient(circle at 15% 75%, rgba(200, 184, 224, 0.4), transparent 45%),
+    linear-gradient(120deg, var(--wl-surface-strong), var(--wl-surface-card));
+}
+
+.pro-dashboard-page .pd-edit-profile {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-hero-portrait-wrap {
+  background: linear-gradient(135deg, var(--wl-gradient-sky), var(--wl-gradient-lavender));
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.pro-dashboard-page .pd-hero-portrait {
+  border-color: var(--wl-surface-card);
+}
+
+.pro-dashboard-page .pd-online {
+  color: var(--wl-success);
+}
+
+.pro-dashboard-page .pd-verified {
+  background: var(--wl-primary);
+  color: var(--wl-on-primary);
+}
+
+.pro-dashboard-page .pd-impact-text {
+  color: var(--wl-body-strong);
+  text-shadow: none;
+}
+
+.pro-dashboard-page .pd-panel,
+.pro-dashboard-page .pd-rec-card,
+.pro-dashboard-page .pd-edit-form {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+  box-shadow: var(--wl-shadow-soft);
+}
+
+.pro-dashboard-page .pd-tabs button.is-active {
+  color: var(--wl-ink);
+  border-bottom-color: var(--wl-primary);
+}
+
+.pro-dashboard-page .pd-skill-tag {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+  color: var(--wl-body-strong);
+}
+
+.pro-dashboard-page .app-logo-bar {
+  background: var(--wl-canvas);
+  border-bottom-color: var(--wl-hairline);
+}
+
+.pro-dashboard-page .pd-tab.is-active {
+  color: var(--wl-ink);
+  border-bottom-color: var(--wl-primary);
+}
+
+.pro-dashboard-page .pd-hero-stats strong {
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-skill-tag {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+  color: var(--wl-body-strong);
+}
+
+.pro-dashboard-page .pd-stats-grid > div {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline);
+}
+
+.pro-dashboard-page .pd-stat-val {
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-rail-avatar {
+  border-color: var(--wl-hairline-strong);
+}
+
+.pro-dashboard-page .pd-verified-badge {
+  background: var(--wl-surface-strong);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-body-strong);
+}
+
+.pro-dashboard-page .pd-status-badge {
+  background: var(--wl-surface-strong);
+  color: var(--wl-body);
+}
+
+.pro-dashboard-page .pd-quick button {
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-quick button:hover {
+  background: var(--wl-surface-strong);
+}
+
+.pro-dashboard-page .pd-qa-icon {
+  background: var(--wl-surface-strong);
+  border: 1px solid var(--wl-hairline);
+}
+
+.pro-dashboard-page .pd-logout-card {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline);
+}
+
+.pro-dashboard-page .pd-edit-form input,
+.pro-dashboard-page .pd-edit-form select,
+.pro-dashboard-page .pd-edit-form textarea {
+  background: var(--wl-surface-card);
+  border-color: var(--wl-hairline-strong);
+  color: var(--wl-ink);
+}
+
+.pro-dashboard-page .pd-edit-preview {
+  border-color: var(--wl-hairline-strong);
+}
+
+.pro-dashboard-page .pd-inner .card {
+  box-shadow: var(--wl-shadow-soft);
+}

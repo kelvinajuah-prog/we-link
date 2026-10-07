@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User registration — WE-LINK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
+  <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
+</head>
+<body class="welink-cinematic">
+  <header data-header></header>
+  <main class="page wrap">
+    <h1>Register as a <span class="gold">user</span></h1>
+    <p class="lede" id="lede">No registration fee and no admin approval. Create your profile and see professionals in your specialisation.</p>
+    <p class="ok" id="complete-banner" hidden style="margin-bottom:16px">You're signed in. Fill in the details below to complete your guest profile.</p>
+    <form class="card" id="user-form" style="max-width:640px">
+      <img class="photo-prev" id="prev" alt="" hidden />
+      <div class="grid-2">
+        <label>Full name <input name="name" required /></label>
+        <label>Age <input type="number" name="age" min="16" max="99" required /></label>
+      </div>
+      <label>Email <input type="email" name="email" required /></label>
+      <label>Password <input type="password" name="password" minlength="6" placeholder="Required for new accounts" /></label>
+      <div class="grid-2">
+        <label>Town / city <input name="town" required placeholder="e.g. Yaoundé" /></label>
+        <label>Area / neighbourhood <input name="area" required placeholder="e.g. Bastos" /></label>
+      </div>
+      <label>Area of specialisation
+        <select name="specialization" required></select>
+      </label>
+      <label>Skills <input name="skills" required placeholder="e.g. sewing, styling, fitting" /></label>
+      <label>Profile photo <input type="file" name="photo" accept="image/*" /></label>
+      <p class="err" id="err" hidden></p>
+      <button class="btn btn-primary ix" type="submit">Create profile</button>
+    </form>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/store.js?v=auth-fix-7"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    (async () => {
+      await WeLink.ready;
+      WeLinkUI.renderHeader(document.querySelector("[data-header]"));
+      const completion = await WeLink.getProfileCompletionState();
+      const completing = new URLSearchParams(location.search).get("complete") === "1" || !!completion;
+      if (completing && completion) {
+        document.getElementById("complete-banner").hidden = false;
+        document.getElementById("lede").textContent = "Complete your guest profile to access the dashboard.";
+        document.querySelector("[name=email]").value = completion.email || "";
+        document.querySelector("[name=password]").placeholder = "Optional — already signed in";
+        document.querySelector("button[type=submit]").textContent = "Complete profile";
+      } else if (new URLSearchParams(location.search).get("complete") === "1") {
+        document.getElementById("lede").textContent = "Sign in first on the guest login page — you'll be redirected here automatically to complete your profile.";
+      }
+      const sel = document.querySelector("[name=specialization]");
+      WeLink.SKILLS.forEach((s) => {
+        const o = document.createElement("option");
+        o.value = s; o.textContent = s; sel.appendChild(o);
+      });
+      const prev = document.getElementById("prev");
+      document.querySelector("[name=photo]").addEventListener("change", async (e) => {
+        try {
+          const data = await WeLinkHelpers.fileToData(e.target.files[0]);
+          if (data) { prev.src = data; prev.hidden = false; }
+        } catch (err) { alert(err.message); }
+      });
+      document.getElementById("user-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const btn = f.querySelector("button");
+        btn.disabled = true;
+        let photo = "";
+        try {
+          photo = await WeLinkHelpers.fileToData(f.photo.files[0]);
+        } catch (err) {
+          document.getElementById("err").hidden = false;
+          document.getElementById("err").textContent = err.message;
+          btn.disabled = false;
+          return;
+        }
+        const completionNow = await WeLink.getProfileCompletionState();
+        if (!completionNow && !f.password.value) {
+          err.hidden = false;
+          err.textContent = "Password is required for new accounts.";
+          btn.disabled = false;
+          return;
+        }
+        const payload = {
+          name: f.name.value,
+          email: f.email.value,
+          age: f.age.value,
+          town: f.town.value,
+          area: f.area.value,
+          specialization: f.specialization.value,
+          skills: f.skills.value,
+          photo
+        };
+        const res = completionNow
+          ? await WeLink.completeGuestProfile(payload)
+          : await WeLink.registerGuest({ ...payload, password: f.password.value });
+        const err = document.getElementById("err");
+        if (!res.ok) {
+          err.hidden = false;
+          if (res.needsLogin) {
+            err.innerHTML = res.error + ' <a class="gold" href="login.html?role=guest">Go to guest login →</a>';
+          } else {
+            err.textContent = res.error;
+          }
+          btn.disabled = false;
+          return;
+        }
+        location.href = "dashboard.html";
+      });
+    })();
+  </script>
+</body>
+</html>

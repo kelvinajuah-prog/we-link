@@ -1,0 +1,508 @@
+/**
+ * WeLink cinematic atmosphere — twilight teal / slate fog with warm amber glow.
+ * Load last on every page; use body.welink-cinematic.
+ */
+:root {
+  --cin-bg-deep: #060e14;
+  --cin-teal-deep: #0c2229;
+  --cin-slate-blue: #1a2a38;
+  --cin-charcoal-mist: #2a343c;
+  --cin-glow-orange: #e8883a;
+  --cin-glow-gold: #f5b942;
+  --cin-glow-soft: rgba(232, 136, 58, 0.18);
+  --cin-ink: #e8eef3;
+  --cin-ink-soft: #b8c4cc;
+  --cin-muted: #a3b3bf;
+  --cin-surface: rgba(14, 28, 38, 0.82);
+  --cin-surface-card: rgba(18, 34, 46, 0.88);
+  --cin-surface-elevated: rgba(24, 42, 56, 0.92);
+  --cin-border: rgba(140, 160, 175, 0.22);
+  --cin-border-warm: rgba(232, 136, 58, 0.35);
+  --cin-primary: var(--cin-glow-orange);
+  --cin-primary-hover: var(--cin-glow-gold);
+  --cin-on-primary: #1a1208;
+}
+
+/* Atmospheric canvas */
+body.welink-cinematic {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  color: var(--cin-ink);
+  background-color: var(--cin-bg-deep);
+  --bg: var(--cin-bg-deep);
+  --card: var(--cin-surface-card);
+  --ink: var(--cin-ink);
+  --muted: var(--cin-muted);
+  --line: var(--cin-border);
+  --line-strong: rgba(140, 160, 175, 0.32);
+  --brand: var(--cin-primary);
+  --brand-2: var(--cin-primary-hover);
+  --brand-ink: var(--cin-on-primary);
+  --wl-canvas: transparent;
+  --wl-canvas-soft: transparent;
+  --wl-surface-card: var(--cin-surface-card);
+  --wl-surface-strong: var(--cin-surface-elevated);
+  --wl-hairline: var(--cin-border);
+  --wl-hairline-strong: rgba(140, 160, 175, 0.35);
+  --wl-ink: var(--cin-ink);
+  --wl-body: var(--cin-ink-soft);
+  --wl-body-strong: var(--cin-ink);
+  --wl-muted: var(--cin-muted);
+  --wl-muted-soft: #8fa3b0;
+  --wl-primary: var(--cin-primary);
+  --wl-primary-active: var(--cin-primary-hover);
+  --wl-on-primary: var(--cin-on-primary);
+  --color-canvas: transparent;
+  --color-surface-card: var(--cin-surface-card);
+  --color-surface-strong: var(--cin-surface-elevated);
+  --color-hairline: var(--cin-border);
+  --color-ink: var(--cin-ink);
+  --color-body: var(--cin-ink-soft);
+  --color-muted: var(--cin-muted);
+  --color-primary: var(--cin-primary);
+  --color-primary-active: var(--cin-primary-hover);
+  --color-on-primary: var(--cin-on-primary);
+}
+
+body.welink-cinematic::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 42% at 78% 72%, rgba(245, 185, 66, 0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 35% 30% at 65% 80%, rgba(232, 136, 58, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 85% 65% at 12% 18%, rgba(12, 34, 41, 0.95) 0%, transparent 62%),
+    radial-gradient(ellipse 100% 75% at 50% 110%, rgba(26, 42, 56, 0.85) 0%, transparent 55%),
+    linear-gradient(168deg, #040a0f 0%, #0c2229 32%, #1a2a38 68%, #121820 100%);
+}
+
+body.welink-cinematic::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(42, 52, 60, 0.45) 0%, transparent 38%, rgba(30, 38, 46, 0.5) 100%);
+  opacity: 0.85;
+}
+
+/* —— Shared app chrome (app.css pages) —— */
+body.welink-cinematic .card,
+body.welink-cinematic .choice a {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body.welink-cinematic .choice a:hover {
+  border-color: var(--cin-border-warm);
+  box-shadow: 0 12px 40px rgba(232, 136, 58, 0.12);
+}
+
+body.welink-cinematic input,
+body.welink-cinematic select,
+body.welink-cinematic textarea {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .btn-primary {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.welink-cinematic .btn-primary:hover {
+  filter: brightness(1.06);
+}
+
+body.welink-cinematic .btn-ghost {
+  color: var(--cin-ink);
+  border-color: var(--cin-border);
+}
+
+body.welink-cinematic .btn-ghost:hover {
+  border-color: var(--cin-border-warm);
+  color: var(--cin-glow-gold);
+}
+
+body.welink-cinematic .app-logo-bar,
+body.welink-cinematic .top {
+  background: rgba(8, 18, 26, 0.75);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(14px);
+}
+
+body.welink-cinematic .lede,
+body.welink-cinematic .muted {
+  color: var(--cin-muted);
+}
+
+/* —— Landing (index) —— */
+body.welink-landing.welink-cinematic {
+  background: transparent;
+  color: var(--cin-ink);
+}
+
+body.welink-landing.welink-cinematic .site-header {
+  background: rgba(8, 18, 26, 0.82);
+  border-bottom-color: var(--cin-border);
+  backdrop-filter: blur(16px);
+}
+
+body.welink-landing.welink-cinematic .nav-links {
+  color: var(--cin-ink-soft);
+}
+
+body.welink-landing.welink-cinematic .nav-links a:hover,
+body.welink-landing.welink-cinematic .nav-links a.active {
+  color: var(--cin-glow-gold);
+}
+
+body.welink-landing.welink-cinematic .nav-links a.active::after {
+  background: var(--cin-glow-orange);
+}
+
+body.welink-landing.welink-cinematic .gold {
+  color: var(--cin-glow-gold);
+}
+
+body.welink-landing.welink-cinematic .hero-lead,
+body.welink-landing.welink-cinematic .cat-card p,
+body.welink-landing.welink-cinematic .ai-feat p,
+body.welink-landing.welink-cinematic .step p {
+  color: var(--cin-muted);
+}
+
+body.welink-landing.welink-cinematic .cat-card,
+body.welink-landing.welink-cinematic .quote {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(14px);
+}
+
+body.welink-landing.welink-cinematic .cat-card:hover {
+  border-color: var(--cin-border-warm);
+}
+
+body.welink-landing.welink-cinematic .float-card,
+body.welink-landing.welink-cinematic .ai-card {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.welink-landing.welink-cinematic .badge {
+  background: rgba(232, 136, 58, 0.12);
+  border-color: var(--cin-border-warm);
+  color: var(--cin-ink-soft);
+}
+
+body.welink-landing.welink-cinematic .step-icon {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  color: var(--cin-glow-gold);
+}
+
+body.welink-landing.welink-cinematic .step-num {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.welink-landing.welink-cinematic .site-footer {
+  border-top-color: var(--cin-border);
+}
+
+body.welink-landing.welink-cinematic .chat-panel,
+body.welink-landing.welink-cinematic .chat-head {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+}
+
+body.welink-landing.welink-cinematic .bubble.bot {
+  background: var(--cin-surface-card);
+  border: 1px solid var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.welink-landing.welink-cinematic .bubble.user {
+  background: linear-gradient(135deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.welink-landing.welink-cinematic .chat-fab {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+/* —— Login —— */
+body.login-page.welink-cinematic {
+  background: transparent;
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-nav {
+  background: rgba(8, 18, 26, 0.85);
+  border-bottom-color: var(--cin-border);
+  backdrop-filter: blur(16px);
+}
+
+body.login-page.welink-cinematic .login-nav-links {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-atmosphere {
+  background: transparent;
+}
+
+body.login-page.welink-cinematic .login-atmosphere::before {
+  opacity: 0.35;
+  filter: blur(72px);
+}
+
+body.login-page.welink-cinematic .login-card {
+  background: var(--cin-surface-card);
+  border: 1px solid var(--cin-border);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(232, 136, 58, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.login-page.welink-cinematic .login-card-head h2 {
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-card-lede,
+body.login-page.welink-cinematic .login-tabs-label {
+  color: var(--cin-muted);
+}
+
+body.login-page.welink-cinematic .login-tab {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-tab.active {
+  border-color: var(--cin-border-warm);
+  color: var(--cin-glow-gold);
+  box-shadow: 0 0 20px var(--cin-glow-soft);
+}
+
+body.login-page.welink-cinematic .login-field input {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.login-page.welink-cinematic .login-submit,
+body.login-page.welink-cinematic .login-submit.login-submit--ready {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+  border: none;
+}
+
+body.login-page.welink-cinematic .login-promo {
+  background: rgba(6, 14, 20, 0.95);
+  border-bottom: 1px solid var(--cin-border);
+}
+
+body.login-page.welink-cinematic .login-forgot {
+  color: #ffffff;
+}
+
+body.login-page.welink-cinematic .login-forgot:hover {
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+body.login-page.welink-cinematic .login-footer {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+body.login-page.welink-cinematic .login-footer a {
+  color: #ffffff;
+}
+
+body.login-page.welink-cinematic .login-footer a:hover {
+  color: #ffffff;
+  opacity: 0.92;
+}
+
+body.login-page.welink-cinematic .login-remember {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-err,
+body.login-page.welink-cinematic #complete-err {
+  color: #ffffff;
+  background: rgba(185, 28, 28, 0.35);
+  border: 1px solid #f87171;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+}
+
+body.login-page.welink-cinematic .login-warn {
+  color: #fffbeb;
+  background: rgba(180, 83, 9, 0.45);
+  border: 1px solid #fbbf24;
+}
+
+body.login-page.welink-cinematic .login-submit-status {
+  color: #bbf7d0;
+  background: rgba(22, 101, 52, 0.35);
+  border: 1px solid #4ade80;
+  border-radius: var(--login-radius-md, 10px);
+  padding: 8px 12px;
+}
+
+body.login-page.welink-cinematic .login-complete-intro {
+  color: var(--cin-ink-soft);
+}
+
+body.login-page.welink-cinematic .login-nav-home {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.login-page.welink-cinematic .login-nav-home:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 24px rgba(232, 136, 58, 0.35);
+}
+
+/* —— Admin —— */
+body.admin-shell.welink-cinematic {
+  background: transparent;
+}
+
+body.admin-shell.welink-cinematic .admin-sidebar {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(14px);
+}
+
+body.admin-shell.welink-cinematic .admin-main,
+body.admin-shell.welink-cinematic .admin-topbar {
+  background: transparent;
+  border-color: var(--cin-border);
+}
+
+body.admin-shell.welink-cinematic .glass-card,
+body.admin-shell.welink-cinematic .surface-card,
+body.admin-shell.welink-cinematic .kpi-card {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(12px);
+}
+
+body.admin-shell.welink-cinematic .button-primary {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.admin-shell.welink-cinematic .nav-link.active {
+  background: var(--cin-surface-elevated);
+  box-shadow: inset 3px 0 0 var(--cin-glow-orange);
+}
+
+/* —— Guest & Pro dashboards —— */
+body.guest-dashboard-page.welink-cinematic,
+body.pro-dashboard-page.welink-cinematic {
+  background: transparent;
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-sidebar,
+body.pro-dashboard-page.welink-cinematic .pd-sidebar {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(14px);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-topbar,
+body.pro-dashboard-page.welink-cinematic .pd-topbar,
+body.guest-dashboard-page.welink-cinematic .app-logo-bar,
+body.pro-dashboard-page.welink-cinematic .app-logo-bar {
+  background: rgba(8, 18, 26, 0.78);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(14px);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-hero,
+body.guest-dashboard-page.welink-cinematic .gd-profile-card,
+body.guest-dashboard-page.welink-cinematic .gd-panel,
+body.guest-dashboard-page.welink-cinematic .gd-rec-card,
+body.pro-dashboard-page.welink-cinematic .pd-hero,
+body.pro-dashboard-page.welink-cinematic .pd-panel {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+  backdrop-filter: blur(12px);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-btn-gradient,
+body.pro-dashboard-page.welink-cinematic .pd-btn-gold,
+body.guest-dashboard-page.welink-cinematic .gd-btn-dark {
+  background: linear-gradient(180deg, var(--cin-glow-gold), var(--cin-glow-orange));
+  color: var(--cin-on-primary);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-nav-item.is-active,
+body.pro-dashboard-page.welink-cinematic .pd-nav-item.is-active {
+  background: var(--cin-surface-elevated);
+  color: var(--cin-glow-gold);
+  box-shadow: inset 3px 0 0 var(--cin-glow-orange);
+}
+
+body.guest-dashboard-page.welink-cinematic .gd-search,
+body.pro-dashboard-page.welink-cinematic .pd-search,
+body.guest-dashboard-page.welink-cinematic .gd-icon-btn,
+body.pro-dashboard-page.welink-cinematic .pd-icon-btn {
+  background: var(--cin-surface-elevated);
+  border-color: var(--cin-border);
+  color: var(--cin-ink);
+}
+
+body.guest-dashboard-page.welink-cinematic::before,
+body.pro-dashboard-page.welink-cinematic::before {
+  opacity: 0.25;
+}
+
+body.guest-dashboard-page.welink-cinematic {
+  --gd-bg: transparent;
+  --gd-surface: transparent;
+  --gd-card: var(--cin-surface-card);
+  --gd-line: var(--cin-border);
+  --gd-text: var(--cin-ink);
+  --gd-muted: var(--cin-muted);
+  color: var(--cin-ink);
+}
+
+body.pro-dashboard-page.welink-cinematic {
+  --pd-bg: transparent;
+  --pd-card: var(--cin-surface-card);
+  --pd-line: var(--cin-border);
+  --pd-text: var(--cin-ink);
+  --pd-muted: var(--cin-muted);
+  color: var(--cin-ink);
+}
+
+body.welink-cinematic .evt-card {
+  background: var(--cin-surface-card);
+  border-color: var(--cin-border);
+}
+
+body.welink-cinematic h1,
+body.welink-cinematic h2,
+body.welink-cinematic h3,
+body.welink-cinematic h4,
+body.welink-cinematic h5,
+body.welink-cinematic h6 {
+  color: var(--cin-ink);
+}
+

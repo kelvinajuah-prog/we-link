@@ -1,0 +1,50 @@
+/**
+ * Profession / skill labels — white for readability on cinematic surfaces.
+ * Covers category cards, hero float cards, pro badges, and dashboard skill tags.
+ */
+
+body.welink-cinematic .cat-card h3,
+body.welink-cinematic #live-pro-list .cat-card h3,
+body.welink-cinematic .float-card strong,
+body.welink-cinematic .pro-card .badge,
+body.welink-cinematic .gd-tag,
+body.welink-cinematic .gd-tag-skill,
+body.welink-cinematic .pd-skill-tag,
+body.welink-cinematic .skills-picker-chip,
+body.welink-cinematic .skills-picker-chip-edit,
+body.welink-cinematic .skills-picker-option,
+body.welink-cinematic .welink-profession-line {
+  color: #ffffff !important;
+}
+
+body.welink-cinematic .float-card .star,
+body.welink-cinematic .cat-card .icon-box {
+  color: #ffffff;
+}
+
+body.welink-cinematic #live-pro-list .cat-card p[style*="font-weight:700"] {
+  color: #ffffff !important;
+}
+
+.welink-profession-line {
+  margin: 6px 0 0;
+  padding: 0;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  color: #ffffff;
+  max-width: min(100%, 280px);
+}
+
+.login-nav-brand .welink-profession-line {
+  font-size: 9px;
+  max-width: 220px;
+}
+
+.gd-brand .welink-profession-line,
+.pd-brand .welink-profession-line {
+  font-size: 9px;
+  margin-top: 8px;
+}
