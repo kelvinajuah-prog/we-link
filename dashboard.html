@@ -15,6 +15,14 @@
   <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
   <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
   <link rel="stylesheet" href="css/welink-skill-labels.css" />
+  <link rel="stylesheet" href="css/welink-theme.css" />
+  <link rel="stylesheet" href="css/welink-responsive.css" />
+  <meta name="theme-color" content="#0c2229" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="WeLink" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <script src="js/theme-boot.js"></script>
 </head>
 <body class="welink-cinematic">
   <header data-header></header>
@@ -32,6 +40,7 @@
   <script src="js/pro-dashboard-ui.js"></script>
   <script src="js/events-ui.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/welink-app.js"></script>
   <script>
     (async () => {
       const s = await WeLinkUI.requireRole();
@@ -127,7 +136,7 @@
         </div>`;
       }
 
-      async function renderAdminSupportChatRoom() {
+      async function renderAdminSupportChatRoom(backAttr) {
         const blocked = WeLink.adminSupportChatBlockedReason(s.id);
         const conv = WeLink.getActiveAdminSupportConversation(s.id);
         if (!conv) {
@@ -136,6 +145,7 @@
         const msgs = await WeLink.getAdminSupportMessages(conv.id);
         return `<div class="chat-room">
           <div class="chat-room-head">
+            <button type="button" class="wl-chat-back" ${backAttr || 'data-guest-view="inbox"'} aria-label="Back to messages">←</button>
             <strong>Admin support</strong>
           </div>
           <div class="chat-msgs chat-msgs-room">${msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet. Say hello.</p>`}</div>
@@ -220,6 +230,21 @@
         box.querySelector(".empty-chat")?.remove();
         box.insertAdjacentHTML("beforeend", messageBubble(m));
         box.scrollTop = box.scrollHeight;
+        const inActiveChat =
+          document.body.classList.contains("wl-chat-open") ||
+          guestView === "chat" ||
+          proView === "chat" ||
+          guestView === "admin-chat" ||
+          proView === "admin-chat";
+        if (m.fromId && m.fromId !== s.id && window.WeLinkApp && !inActiveChat) {
+          WeLinkApp.notify({
+            category: "newMessages",
+            title: "New Message",
+            body: "You have a new message.",
+            tag: "msg-" + (m.id || Date.now()),
+            url: "dashboard.html"
+          });
+        }
       }
 
       function rowToMessage(row) {
@@ -269,7 +294,7 @@
         if (box) box.scrollTop = box.scrollHeight;
       }
 
-      async function renderChatRoom(peer, guestId, proId) {
+      async function renderChatRoom(peer, guestId, proId, backAttr) {
         const blocked = WeLink.conversationChatBlockedReason(guestId, proId);
         if (blocked) {
           return `<p class="muted">${H.esc(blocked)}</p>`;
@@ -281,8 +306,12 @@
         const msgs = await WeLink.getConversationMessages(conversation.id);
         return `<div class="chat-room">
           <div class="chat-room-head">
+            <button type="button" class="wl-chat-back" ${backAttr || 'data-guest-view="inbox"'} aria-label="Back to messages">←</button>
             <img class="avatar-sm" src="${H.avatarUrl(peer)}" alt="" />
-            <strong>${H.esc(peer?.name || "Chat")}</strong>
+            <div>
+              <strong>${H.esc(peer?.name || "Chat")}</strong>
+              <div class="muted" style="font-size:12px;font-weight:500">Available</div>
+            </div>
           </div>
           <div class="chat-msgs chat-msgs-room">${msgs.length ? msgs.map(messageBubble).join("") : `<p class="muted empty-chat">No messages yet. Say hello or share a photo.</p>`}</div>
           ${WeLinkChatUI.chatComposerHtml()}
@@ -296,11 +325,24 @@
         const filtered = D.filterPros(allPros, { search: browseSearch, skill: browseSkill });
         const msgCount = guestMsgCount(db);
         const G = WeLinkGuestUI;
+        if (window.WeLinkApp) {
+          WeLinkApp.setChatOpen(guestView === "chat" || guestView === "admin-chat");
+        }
+
+        if (guestView === "settings") {
+          app.innerHTML = G.layoutInner({
+            guestView: "settings",
+            user: u,
+            msgCount,
+            title: "Settings",
+            bodyHtml: window.WeLinkApp ? WeLinkApp.settingsPanelHtml("guest") : "<p>Settings unavailable.</p>"
+          });
+          bindGuestEvents();
+          return;
+        }
 
         if (guestView === "admin-chat") {
-          const body = `<button class="gd-back" type="button" data-guest-view="inbox">← Messages</button>
-            <h2 style="margin:0 0 16px">Chat with admin</h2>
-            ${await renderAdminSupportChatRoom()}`;
+          const body = `${await renderAdminSupportChatRoom("data-guest-view=\"inbox\"")}`;
           app.innerHTML = G.layoutInner({ guestView: "inbox", user: u, msgCount, title: "", bodyHtml: body });
           bindGuestEvents();
           const conv = WeLink.getActiveAdminSupportConversation(s.id);
@@ -310,9 +352,7 @@
 
         if (guestView === "chat" && selectedProId) {
           const p = allPros.find((x) => x.id === selectedProId) || (await WeLink.getPro(selectedProId));
-          const body = `<button class="gd-back" type="button" data-guest-view="inbox">← Messages</button>
-            <h2 style="margin:0 0 16px">Chat with ${H.esc(p?.name || "Professional")}</h2>
-            ${await renderChatRoom(p, s.id, selectedProId)}`;
+          const body = `${await renderChatRoom(p, s.id, selectedProId, "data-guest-view=\"inbox\"")}`;
           app.innerHTML = G.layoutInner({ guestView: "inbox", user: u, msgCount, title: "", bodyHtml: body });
           bindGuestEvents();
           const conv = WeLink.getActiveConversation(s.id, selectedProId);
@@ -470,6 +510,10 @@
       }
 
       function bindGuestEvents() {
+        if (window.WeLinkApp) {
+          WeLinkApp.injectThemeControls();
+          WeLinkApp.bindThemeMenus();
+        }
         app.querySelectorAll("[data-guest-view]").forEach((btn) => {
           btn.addEventListener("click", () => {
             leaveChat();
@@ -481,6 +525,10 @@
         });
         app.querySelectorAll("[data-guest-logout]").forEach((btn) => {
           btn.addEventListener("click", async () => {
+            if (window.WeLinkRealtime) {
+              WeLinkRealtime.unsubscribeUserNotifications();
+              await WeLinkRealtime.disposeAll();
+            }
             await WeLink.logout();
             location.href = "login.html?role=guest";
           });
@@ -756,10 +804,24 @@
           const filtered = D.filterPros(allPros, { search: browseSearch, skill: browseSkill });
           const stats = proStats(db);
 
+          if (window.WeLinkApp) {
+            WeLinkApp.setChatOpen(proView === "chat" || proView === "admin-chat");
+          }
+
+          if (proView === "settings") {
+            app.innerHTML = P.layoutInner({
+              proView: "settings",
+              pro: p,
+              msgCount,
+              title: "Settings",
+              innerHtml: window.WeLinkApp ? WeLinkApp.settingsPanelHtml("professional") : "<p>Settings unavailable.</p>"
+            });
+            bindProEvents();
+            return;
+          }
+
           if (proView === "admin-chat") {
-            const inner = `<button class="pd-back" type="button" data-pro-view="messages">← Messages</button>
-              <h2 style="margin:0 0 16px">Chat with admin</h2>
-              ${await renderAdminSupportChatRoom()}`;
+            const inner = `${await renderAdminSupportChatRoom("data-pro-view=\"messages\"")}`;
             app.innerHTML = P.layoutInner({ proView: "messages", pro: p, msgCount, title: "", innerHtml: inner });
             bindProEvents();
             const conv = WeLink.getActiveAdminSupportConversation(s.id);
@@ -769,9 +831,7 @@
 
           if (proView === "chat" && selectedGuestId) {
             const guest = db.guests.find((g) => g.id === selectedGuestId) || (await WeLink.getGuest(selectedGuestId));
-            const inner = `<button class="pd-back" type="button" data-pro-view="messages">← Messages</button>
-              <h2 style="margin:0 0 16px">Chat with ${H.esc(guest?.name || "Guest")}</h2>
-              ${await renderChatRoom(guest, selectedGuestId, s.id)}`;
+            const inner = `${await renderChatRoom(guest, selectedGuestId, s.id, "data-pro-view=\"messages\"")}`;
             app.innerHTML = P.layoutInner({ proView: "messages", pro: p, msgCount, title: "", innerHtml: inner });
             bindProEvents();
             const conv = WeLink.getActiveConversation(selectedGuestId, s.id);
@@ -905,6 +965,10 @@
       }
 
       function bindProEvents() {
+        if (window.WeLinkApp) {
+          WeLinkApp.injectThemeControls();
+          WeLinkApp.bindThemeMenus();
+        }
         app.querySelectorAll("[data-pro-view]").forEach((btn) => {
           btn.addEventListener("click", () => {
             leaveChat();
@@ -923,6 +987,10 @@
         });
         app.querySelectorAll("[data-pro-logout]").forEach((btn) => {
           btn.addEventListener("click", async () => {
+            if (window.WeLinkRealtime) {
+              WeLinkRealtime.unsubscribeUserNotifications();
+              await WeLinkRealtime.disposeAll();
+            }
             await WeLink.logout();
             location.href = "login.html?role=professional";
           });
@@ -1007,6 +1075,20 @@
 
       if (s.role === "guest") await renderGuest();
       else await renderPro();
+
+      if (window.WeLinkRealtime?.subscribeUserNotifications && s.id) {
+        WeLinkRealtime.subscribeUserNotifications(s.id, (row) => {
+          if (!row || !window.WeLinkApp) return;
+          const category = WeLinkApp.classifyNotification(row.message, s.role);
+          WeLinkApp.notify({
+            category,
+            title: "WeLink",
+            body: row.message || "You have a new notification.",
+            tag: "note-" + (row.id || Date.now()),
+            url: "dashboard.html"
+          });
+        });
+      }
 
       WeLink.onChange(() => {
         if (guestView === "admin-chat" || proView === "admin-chat") {

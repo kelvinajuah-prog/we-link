@@ -548,8 +548,6 @@
 }
 
 @media (max-width: 900px) {
-  .pd-app { grid-template-columns: 1fr; }
-  .pd-sidebar { height: auto; position: relative; }
   .pd-hero-inner { grid-template-columns: 1fr; text-align: center; }
   .pd-impact-text { text-align: center; }
 }

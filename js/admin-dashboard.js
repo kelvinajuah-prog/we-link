@@ -187,12 +187,19 @@
     return (text || "").toLowerCase().includes(searchQuery.toLowerCase());
   }
 
+  function syncAdminRealtimeMobileView() {
+    const mobile = window.matchMedia("(max-width: 1023px)").matches;
+    const open = mobile && !!selectedConversationId && currentSection === "realtime";
+    document.body.classList.toggle("wl-chat-thread", open);
+  }
+
   function navigate(section, opts = {}) {
     const prev = currentSection;
     if (prev === "realtime" && section !== "realtime" && global.WeLinkRealtime) {
       WeLinkRealtime.unsubscribeMessages();
       selectedConversationId = null;
       liveMessages = [];
+      document.body.classList.remove("wl-chat-thread");
     }
     currentSection = section;
     document.querySelectorAll(".nav-link").forEach((el) => {
@@ -519,7 +526,7 @@
       onMemberChange() {
         refreshStatsSurfaces();
       },
-      onAdminNotification(row) {
+        onAdminNotification(row) {
         if (!row || row.owner_id !== session.id) return;
         refreshStatsSurfaces();
         const dropdown = document.getElementById("notes-dropdown");
@@ -1324,7 +1331,8 @@
           <img src="${H().avatarUrl(ap)}" alt="" style="width:48px;height:48px;border-radius:50%" />
           <div><strong>${H().esc(ap.name)}</strong><br><span style="color:var(--color-muted);font-size:13px">${H().esc(session?.email || "")} · Super Administrator</span></div>
         </div>
-        <h3 style="font-size:14px;margin:0 0 8px">Danger zone</h3>
+        ${global.WeLinkApp ? WeLinkApp.settingsPanelHtml("admin") : ""}
+        <h3 style="font-size:14px;margin:20px 0 8px">Danger zone</h3>
         <p style="color:var(--color-muted);font-size:13px;margin:0 0 12px">Remove all data for a user by email address.</p>
         <div class="purge-form">
           <input type="email" class="text-input" id="purge-email" placeholder="user@example.com" />
@@ -1398,6 +1406,7 @@
     document.querySelectorAll("[data-conv-id]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.convId === conversationId);
     });
+    syncAdminRealtimeMobileView();
   }
 
   async function renderRealtime() {
@@ -1437,8 +1446,9 @@
             ? '<p class="empty-state">No conversations match your search.</p>'
             : '<p class="empty-state">No active conversations to monitor right now.</p>')}
         </aside>
-        <div class="realtime-viewer" id="realtime-viewer">
+        <div class="realtime-viewer realtime-thread-pane" id="realtime-viewer">
           ${selected ? `<header class="realtime-viewer-header">
+            <button type="button" class="wl-chat-back" data-realtime-back aria-label="Back to conversation list">←</button>
             <div><strong>${H().esc(selected.guestName)}</strong> · ${H().esc(selected.guestSpecialization || "Guest")}
             ↔ <strong>${H().esc(selected.proName)}</strong> · ${H().esc(selected.proSkill || "Pro")}
             <span class="status-pill ${pillClass(selected.status || "active")}" style="margin-left:8px">${H().statusBadge(selected.status || "active")}</span></div>
@@ -1467,8 +1477,18 @@
       });
     });
 
+    el.querySelector("[data-realtime-back]")?.addEventListener("click", async () => {
+      if (global.WeLinkRealtime) WeLinkRealtime.unsubscribeMessages();
+      selectedConversationId = null;
+      liveMessages = [];
+      syncAdminRealtimeMobileView();
+      await renderRealtime();
+    });
+
     if (selectedConversationId && selected) {
       await selectRealtimeConversation(selectedConversationId, db);
+    } else {
+      syncAdminRealtimeMobileView();
     }
 
     updateConnectionBadge(global.WeLinkRealtime?.getConnectionStatus?.() || "idle");
@@ -1591,7 +1611,10 @@
     });
 
     document.getElementById("topbar-logout")?.addEventListener("click", async () => {
-      if (global.WeLinkRealtime) await WeLinkRealtime.disposeAll();
+      if (global.WeLinkRealtime) {
+        WeLinkRealtime.unsubscribeUserNotifications();
+        await WeLinkRealtime.disposeAll();
+      }
       await WeLink.logout();
       location.href = "index.html";
     });
@@ -1772,6 +1795,23 @@
         presenceState = state;
       });
       setupAdminRealtimeFeeds();
+      if (session.id && global.WeLinkApp) {
+        WeLinkRealtime.subscribeUserNotifications(session.id, (row) => {
+          if (!row || row.owner_id !== session.id) return;
+          const category = WeLinkApp.classifyNotification(row.message, "admin");
+          WeLinkApp.notify({
+            category,
+            title: "WeLink Admin",
+            body: row.message || "You have a new notification.",
+            tag: "admin-note-" + (row.id || Date.now()),
+            url: "admin.html"
+          });
+        });
+      }
+    }
+    if (global.WeLinkApp) {
+      WeLinkApp.injectThemeControls();
+      WeLinkApp.bindThemeMenus();
     }
   }
 

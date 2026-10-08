@@ -9,7 +9,7 @@
     { view: "events", label: "Events", icon: "calendar" },
     { view: "home", label: "Learning", icon: "book", soon: true },
     { view: "home", label: "Wallet & Payments", icon: "wallet", soon: true },
-    { view: "home", label: "Settings", icon: "settings", soon: true }
+    { view: "settings", label: "Settings", icon: "settings" }
   ];
 
   function icon(name) {
@@ -55,11 +55,12 @@
       </aside>
       <div class="pd-main">
         <header class="pd-topbar">
+          <button type="button" class="wl-nav-toggle" data-wl-nav-toggle aria-label="Open menu" aria-expanded="false">${global.WeLinkApp ? WeLinkApp.hamburgerSvg() : "☰"}</button>
           <form class="pd-search" data-pro-search-form>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
             <input type="search" name="q" placeholder="Search professionals, skills, communities…" />
           </form>
-          <div class="pd-topbar-actions">
+          <div class="pd-topbar-actions" data-wl-theme-host>
             <button type="button" class="pd-icon-btn" data-pro-view="messages" aria-label="Notifications">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
               ${msgCount ? `<span class="pd-notif-dot">${msgCount > 9 ? "9+" : msgCount}</span>` : ""}

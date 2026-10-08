@@ -13,6 +13,14 @@
   <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
   <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
   <link rel="stylesheet" href="css/welink-skill-labels.css" />
+  <link rel="stylesheet" href="css/welink-theme.css" />
+  <link rel="stylesheet" href="css/welink-responsive.css" />
+  <meta name="theme-color" content="#0c2229" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="WeLink" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <script src="js/theme-boot.js"></script>
 </head>
 <body class="admin-shell welink-cinematic">
   <header data-header></header>
@@ -48,7 +56,7 @@
           <kbd class="search-kbd">Ctrl K</kbd>
         </div>
 
-        <div class="topbar-actions">
+        <div class="topbar-actions" data-wl-theme-host>
           <div class="bell-wrap">
             <button type="button" class="topbar-bell" id="topbar-bell" aria-label="Notifications">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -185,6 +193,7 @@
   <script src="js/realtime.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/events-ui.js"></script>
+  <script src="js/welink-app.js"></script>
   <script src="js/admin-dashboard.js"></script>
   <script>
     WeLinkAdminDashboard.init();

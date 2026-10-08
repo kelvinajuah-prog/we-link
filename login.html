@@ -12,6 +12,14 @@
   <link rel="stylesheet" href="css/welink-cinematic-theme.css" />
   <link rel="stylesheet" href="css/welink-cinematic-readability.css" />
   <link rel="stylesheet" href="css/welink-skill-labels.css" />
+  <link rel="stylesheet" href="css/welink-theme.css" />
+  <link rel="stylesheet" href="css/welink-responsive.css" />
+  <meta name="theme-color" content="#0c2229" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="WeLink" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <script src="js/theme-boot.js"></script>
 </head>
 <body class="login-page welink-cinematic">
   <div class="login-promo">
@@ -29,7 +37,7 @@
       <a href="professionals.html">Navigation <span aria-hidden="true">▾</span></a>
       <a href="index.html">Captions <span aria-hidden="true">▾</span></a>
     </nav>
-    <div class="login-nav-actions">
+    <div class="login-nav-actions" data-wl-theme-host>
       <a class="login-nav-home" href="/">Home</a>
     </div>
   </header>
@@ -119,5 +127,6 @@
   <script src="js/store.js"></script>
   <script src="js/login.js"></script>
   <script>WeLinkLogin.init();</script>
+  <script src="js/welink-app.js"></script>
 </body>
 </html>

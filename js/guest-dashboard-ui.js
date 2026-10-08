@@ -6,6 +6,7 @@
     { id: "discover", view: "browse", label: "Discover", icon: "compass" },
     { id: "events", view: "events", label: "Events", icon: "calendar" },
     { id: "messages", view: "inbox", label: "Messages", icon: "message", badge: true },
+    { id: "settings", view: "settings", label: "Settings", icon: "settings" },
     { id: "help", view: "home", label: "Help", icon: "help", muted: true }
   ];
 
@@ -16,7 +17,8 @@
       calendar: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/>',
       message: '<path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h4a8 8 0 0 1 8 8z"/>',
       users: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
-      help: '<circle cx="12" cy="12" r="10"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.2 1.8c0 1.8-2.5 2-2.5 3.7M12 17h.01"/>'
+      help: '<circle cx="12" cy="12" r="10"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.2 1.8c0 1.8-2.5 2-2.5 3.7M12 17h.01"/>',
+      settings: '<circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'
     };
     return `<svg class="gd-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${icons[name] || icons.home}</svg>`;
   }
@@ -49,11 +51,12 @@
       </aside>
       <div class="gd-main">
         <header class="gd-topbar">
+          <button type="button" class="wl-nav-toggle" data-wl-nav-toggle aria-label="Open menu" aria-expanded="false">${global.WeLinkApp ? WeLinkApp.hamburgerSvg() : "☰"}</button>
           <form class="gd-search" role="search" data-guest-search-form>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
             <input type="search" name="q" placeholder="Search professionals, skills, communities…" aria-label="Search" />
           </form>
-          <div class="gd-topbar-actions">
+          <div class="gd-topbar-actions" data-wl-theme-host>
             <button type="button" class="gd-icon-btn" aria-label="Notifications" data-guest-view="inbox">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
               ${msgCount > 0 ? `<span class="gd-notif-dot">${msgCount > 9 ? "9+" : msgCount}</span>` : ""}

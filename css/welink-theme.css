@@ -1,0 +1,541 @@
+/**
+ * WeLink appearance tokens — Light / Dark.
+ * Dark keeps the existing cinematic identity. Light uses WeLink editorial surfaces.
+ */
+:root {
+  --background: #060e14;
+  --surface: rgba(18, 34, 46, 0.88);
+  --surface-secondary: rgba(24, 42, 56, 0.92);
+  --text-primary: #e8eef3;
+  --text-secondary: #a3b3bf;
+  --border: rgba(140, 160, 175, 0.22);
+  --primary: #e8883a;
+  --primary-hover: #f5b942;
+  --on-primary: #1a1208;
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --touch: 44px;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #060e14;
+  --surface: rgba(18, 34, 46, 0.88);
+  --surface-secondary: rgba(24, 42, 56, 0.92);
+  --text-primary: #e8eef3;
+  --text-secondary: #a3b3bf;
+  --border: rgba(140, 160, 175, 0.22);
+  --primary: #e8883a;
+  --primary-hover: #f5b942;
+  --on-primary: #1a1208;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --background: #f5f5f5;
+  --surface: #ffffff;
+  --surface-secondary: #fafafa;
+  --text-primary: #0c0a09;
+  --text-secondary: #4e4e4e;
+  --border: #e7e5e4;
+  --primary: #292524;
+  --primary-hover: #0c0a09;
+  --on-primary: #ffffff;
+  --shadow: 0 8px 24px rgba(12, 10, 9, 0.06);
+}
+
+html[data-theme="light"] {
+  --bg: var(--background);
+  --card: var(--surface);
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --line: var(--border);
+  --line-strong: #d6d3d1;
+  --brand: var(--primary);
+  --brand-2: var(--primary-hover);
+  --brand-ink: var(--on-primary);
+  --wl-canvas: var(--background);
+  --wl-canvas-soft: var(--surface-secondary);
+  --wl-surface-card: var(--surface);
+  --wl-surface-strong: #f0efed;
+  --wl-hairline: var(--border);
+  --wl-hairline-strong: #d6d3d1;
+  --wl-ink: var(--text-primary);
+  --wl-body: var(--text-secondary);
+  --wl-body-strong: #292524;
+  --wl-muted: #777169;
+  --wl-primary: var(--primary);
+  --wl-primary-active: var(--primary-hover);
+  --wl-on-primary: var(--on-primary);
+  --cin-bg-deep: var(--background);
+  --cin-ink: var(--text-primary);
+  --cin-ink-soft: var(--text-secondary);
+  --cin-muted: #777169;
+  --cin-surface: var(--surface);
+  --cin-surface-card: var(--surface);
+  --cin-surface-elevated: var(--surface-secondary);
+  --cin-border: var(--border);
+}
+
+html[data-theme="light"] body.welink-cinematic::before,
+html[data-theme="light"] body.welink-cinematic::after,
+html[data-theme="light"] .guest-dashboard-page::before,
+html[data-theme="light"] .pro-dashboard-page::before {
+  display: none;
+}
+
+html[data-theme="light"] body.welink-cinematic {
+  background-color: var(--background);
+  color: var(--text-primary);
+  --bg: var(--background);
+  --card: var(--surface);
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --line: var(--border);
+  --brand: var(--primary);
+  --brand-2: var(--primary-hover);
+  --brand-ink: var(--on-primary);
+}
+
+html[data-theme="light"] body.welink-cinematic .card,
+html[data-theme="light"] body.welink-cinematic .choice a {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
+}
+
+html[data-theme="light"] body.welink-cinematic input,
+html[data-theme="light"] body.welink-cinematic select,
+html[data-theme="light"] body.welink-cinematic textarea {
+  background: var(--surface-secondary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] body.welink-cinematic .btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+html[data-theme="light"] body.welink-cinematic .btn-ghost {
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+html[data-theme="light"] body.welink-cinematic .app-logo-bar,
+html[data-theme="light"] body.welink-cinematic .top {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+html[data-theme="light"] body {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+/* Guest dashboard — light */
+html[data-theme="light"] .guest-dashboard-page {
+  --gd-bg: #f5f5f5;
+  --gd-surface: #ffffff;
+  --gd-card: #ffffff;
+  --gd-card-2: #fafafa;
+  --gd-line: #e7e5e4;
+  --gd-text: #0c0a09;
+  --gd-muted: #777169;
+  background: var(--gd-bg);
+  color: var(--gd-text);
+}
+
+html[data-theme="light"] .gd-sidebar {
+  background: #ffffff;
+  border-right-color: var(--gd-line);
+}
+
+html[data-theme="light"] .gd-nav-item:hover {
+  background: #f5f5f5;
+  color: var(--gd-text);
+}
+
+html[data-theme="light"] .gd-topbar,
+html[data-theme="light"] .gd-search,
+html[data-theme="light"] .gd-user-chip,
+html[data-theme="light"] .gd-profile-card,
+html[data-theme="light"] .gd-panel,
+html[data-theme="light"] .gd-hero,
+html[data-theme="light"] .gd-inner-page .card {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Professional dashboard — light */
+html[data-theme="light"] .pro-dashboard-page {
+  --pd-bg: #f5f5f5;
+  --pd-surface: #ffffff;
+  --pd-card: #ffffff;
+  --pd-line: #e7e5e4;
+  --pd-text: #0c0a09;
+  --pd-muted: #777169;
+  background: var(--pd-bg);
+  color: var(--pd-text);
+}
+
+html[data-theme="light"] .pd-sidebar {
+  background: #ffffff;
+  border-right-color: var(--pd-line);
+}
+
+html[data-theme="light"] .pd-topbar,
+html[data-theme="light"] .pd-search,
+html[data-theme="light"] .pd-user-chip,
+html[data-theme="light"] .pd-panel,
+html[data-theme="light"] .pd-hero {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Admin — restore editorial light surfaces */
+html[data-theme="light"] body.admin-shell.welink-cinematic {
+  --color-canvas: #f5f5f5;
+  --color-canvas-soft: #fafafa;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #f0efed;
+  --color-hairline: #e7e5e4;
+  --color-hairline-strong: #d6d3d1;
+  --color-ink: #0c0a09;
+  --color-body: #4e4e4e;
+  --color-muted: #777169;
+  --color-primary: #292524;
+  --color-primary-active: #0c0a09;
+  --color-on-primary: #ffffff;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+html[data-theme="light"] .admin-sidebar {
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .admin-topbar,
+html[data-theme="light"] .glass-card,
+html[data-theme="light"] .admin-search {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+/* Login — dark uses cinematic tokens; light keeps the white mockup */
+html[data-theme="dark"] body.login-page {
+  --login-canvas: #060e14;
+  --login-ink: #e8eef3;
+  --login-body: #a3b3bf;
+  --login-muted: #8fa3b0;
+  --login-primary: #e8883a;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] body.login-page {
+  --login-canvas: #ffffff;
+  --login-ink: #111111;
+  --login-body: #737373;
+  --login-muted: #a3a3a3;
+  --login-primary: #111111;
+}
+
+html[data-theme="light"] .login-promo {
+  background: #0c0a09;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .site-header,
+html[data-theme="light"] body.welink-landing .nav,
+html[data-theme="light"] .mobile-panel.open {
+  background: var(--surface) !important;
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] body.welink-landing .site-header {
+  backdrop-filter: blur(12px);
+}
+
+html[data-theme="light"] body.welink-landing .nav-links {
+  color: var(--text-secondary);
+}
+
+html[data-theme="light"] body.welink-landing .nav-links a:hover,
+html[data-theme="light"] body.welink-landing .nav-links a.active {
+  color: var(--primary);
+}
+
+html[data-theme="dark"] body.welink-landing .site-header {
+  background: rgba(8, 18, 26, 0.88) !important;
+}
+
+html[data-theme="light"] .menu-toggle {
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .btn-ghost {
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .chat-room,
+html[data-theme="light"] .chat-bubble.theirs,
+html[data-theme="light"] .chat-attach {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .chat-bubble.mine {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Theme control */
+.wl-theme-btn,
+.wl-nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.wl-theme-btn:hover,
+.wl-nav-toggle:hover {
+  border-color: var(--primary);
+}
+
+.wl-theme-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 80;
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.wl-theme-wrap {
+  position: relative;
+}
+
+.wl-theme-wrap.open .wl-theme-menu {
+  display: grid;
+  gap: 4px;
+}
+
+.wl-theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.wl-theme-option[aria-checked="true"],
+.wl-theme-option:hover {
+  background: var(--surface-secondary);
+}
+
+/* Settings */
+.wl-settings {
+  display: grid;
+  gap: 20px;
+  max-width: 640px;
+}
+
+.wl-settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.wl-settings-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.wl-settings-card p {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.wl-radio-row,
+.wl-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--touch);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.wl-radio-row:last-child,
+.wl-switch-row:last-child {
+  border-bottom: 0;
+}
+
+.wl-switch {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.wl-switch input {
+  opacity: 0;
+  width: 44px;
+  height: 26px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.wl-switch span {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 999px;
+  background: var(--border);
+  transition: background 0.16s;
+}
+
+.wl-switch span::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.16s;
+}
+
+.wl-switch input:checked + span {
+  background: var(--success);
+}
+
+.wl-switch input:checked + span::after {
+  transform: translateX(18px);
+}
+
+.wl-switch input:focus-visible + span {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.wl-switch input:disabled + span {
+  opacity: 0.45;
+}
+
+/* Install banner */
+.wl-install {
+  position: fixed;
+  z-index: 120;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  max-width: 420px;
+  margin-inline: auto;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.wl-install[data-open="1"] {
+  display: block;
+}
+
+.wl-install h2 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+
+.wl-install p {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.wl-install-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-install-actions button {
+  min-height: var(--touch);
+  padding: 0 16px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wl-install-actions .wl-install-go {
+  background: var(--primary);
+  color: var(--on-primary);
+  border: 0;
+}
+
+.wl-install-actions .wl-install-later {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}

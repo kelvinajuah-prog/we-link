@@ -27,7 +27,7 @@
       : "";
     root.innerHTML = `<div class="wrap top">
       <a class="brand ix" href="index.html">${logo}</a>
-      <div class="nav-right">
+      <div class="nav-right" data-wl-theme-host>
         ${bell}
         <a class="ix" href="${d.login}">${s ? s.name : "Log In"}</a>
         ${d.extra}
@@ -45,6 +45,10 @@
       const c = bellBtn.querySelector(".bell-count");
       if (c) c.remove();
     });
+    if (global.WeLinkApp) {
+      WeLinkApp.injectThemeControls();
+      WeLinkApp.bindThemeMenus();
+    }
   }
 
   async function requireRole(role) {

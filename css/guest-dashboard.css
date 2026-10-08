@@ -1202,21 +1202,6 @@
     font-size: 1.1rem;
     left: 6%;
   }
-  .gd-app {
-    grid-template-columns: 1fr;
-  }
-  .gd-sidebar {
-    position: relative;
-    height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .gd-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-  }
   .gd-hero {
     grid-template-columns: 1fr;
   }

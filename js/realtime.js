@@ -117,6 +117,31 @@
     return removeChannel("admin-support-messages");
   }
 
+  function subscribeUserNotifications(ownerId, onInsert) {
+    return (async () => {
+      await removeChannel("user-notifications");
+      if (!ownerId || typeof onInsert !== "function") return;
+      await setChannel("user-notifications", (sb) =>
+        sb.channel("user-notifications:" + ownerId)
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "notifications",
+              filter: "owner_id=eq." + ownerId
+            },
+            (payload) => onInsert(payload.new)
+          )
+          .subscribe()
+      );
+    })();
+  }
+
+  function unsubscribeUserNotifications() {
+    return removeChannel("user-notifications");
+  }
+
   function subscribeAdminFeeds(handlers) {
     return (async () => {
       await removeChannel("admin-feeds");
@@ -228,6 +253,8 @@
     unsubscribeParticipantMessages,
     subscribeAdminSupportMessages,
     unsubscribeAdminSupportMessages,
+    subscribeUserNotifications,
+    unsubscribeUserNotifications,
     subscribeAdminFeeds,
     unsubscribeAdminFeeds,
     trackPresence,
